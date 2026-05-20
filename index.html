@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RPG選択ゲーム</title>
+
+    <style>
+        @font-face {
+            font-family: 'PixelMplus';
+            src: url('./PixelMplus12-Regular.ttf') format('truetype');
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: black;
+            color: white;
+            font-family: 'PixelMplus', sans-serif;
+
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ===== スクリーン共通 ===== */
+        .screen {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* ===== タイトル ===== */
+        #titleScreen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to bottom, #1d3557, #000);
+        }
+
+        .game-title {
+            font-size: clamp(32px, 6vw, 72px);
+            margin-bottom: 30px;
+        }
+
+        .start-text {
+            font-size: clamp(16px, 3vw, 30px);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* ===== ゲーム ===== */
+        #gameScreen {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 画像 */
+        .image-container {
+            width: 100%;
+            height: 65vh;
+            background: black;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* ダイアログ */
+        .dialog-box {
+            width: 100%;
+            height: 35vh;
+
+            background: rgba(0, 0, 0, 0.95);
+            border-top: 4px solid white;
+
+            padding: 12px 18px;
+        }
+
+        /* 名前 */
+        .name-box {
+            display: inline-block;
+            border: 3px solid white;
+            padding: 2px 10px;
+            font-size: clamp(14px, 2vw, 20px);
+            margin-bottom: 8px;
+        }
+
+        /* テキスト */
+        .dialog-text {
+            font-size: clamp(16px, 2.5vw, 24px);
+            line-height: 1.5;
+            min-height: 60px;
+            margin-bottom: 10px;
+        }
+
+        /* 選択肢 */
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: clamp(16px, 2.5vw, 24px);
+        }
+
+        .choice::before {
+            content: "　";
+            margin-right: 8px;
+        }
+
+        .choice.selected::before {
+            content: "▶";
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- タイトル -->
+    <div class="screen" id="titleScreen">
+        <div class="game-title">RPG選択ゲーム</div>
+        <div class="start-text">ENTERキーでスタート</div>
+    </div>
+
+    <!-- ゲーム -->
+    <div class="screen" id="gameScreen">
+
+        <div class="image-container">
+            <img src="./test.png" />
+        </div>
+
+        <div class="dialog-box">
+
+            <div class="name-box" id="nameBox"></div>
+            <div class="dialog-text" id="dialogText"></div>
+            <div class="choices" id="choices"></div>
+
+        </div>
+    </div>
+
+    <script>
+
+        const scenes = {
+            start: {
+                name: "謎の人物",
+                text: "景気が悪いぞ どうする?",
+                choices: [
+                    { text: "自由放任する", next: "bad1" },
+                    { text: "公共事業する", next: "bad2" },
+                    { text: "革命を起こす", next: "good" }
+                ]
+            },
+
+            bad1: {
+                name: "謎の人物",
+                text: "自由放任したが、公共財にお金を使っていたため失敗した...",
+                choices: [{ text: "戻る", next: "start" }]
+            },
+
+            bad2: {
+                name: "謎の人物",
+                text: "公共事業したが、逆に人々の反感を買ってしまった...",
+                choices: [{ text: "戻る", next: "start" }]
+            },
+
+            good: {
+                name: "謎の人物",
+                text: "革命を起こした!",
+                choices: [{ text: "進む", next: "end" }]
+            },
+
+            end: {
+                name: "ｑｗｆとぉさぎうお",
+                text: "革命を起こしたことで景気が良くなった!",
+                choices: [{ text: "タイトルへ", next: "title" }]
+            }
+        };
+
+        let currentScene = "start";
+        let selectedIndex = 0;
+        let gameStarted = false;
+
+        /* タイピング制御 */
+        let typing = false;
+        let fullText = "";
+        let index = 0;
+        let interval = null;
+
+        const nameBox = document.getElementById("nameBox");
+        const dialogText = document.getElementById("dialogText");
+        const choicesContainer = document.getElementById("choices");
+
+        /* 1回だけタイピング */
+        function typeText(text) {
+            clearInterval(interval);
+
+            fullText = text;
+            index = 0;
+            typing = true;
+            dialogText.textContent = "";
+
+            interval = setInterval(() => {
+                dialogText.textContent += fullText[index];
+                index++;
+
+                if (index >= fullText.length) {
+                    clearInterval(interval);
+                    typing = false;
+                }
+            }, 30);
+        }
+
+        /* シーン描画（ここでのみタイピング） */
+        function renderScene() {
+            const scene = scenes[currentScene];
+
+            nameBox.textContent = scene.name;
+
+            typeText(scene.text); // ← ここだけで発火
+
+            choicesContainer.innerHTML = "";
+
+            scene.choices.forEach((c, i) => {
+                const div = document.createElement("div");
+                div.className = "choice";
+                if (i === selectedIndex) div.classList.add("selected");
+                div.textContent = c.text;
+                choicesContainer.appendChild(div);
+            });
+        }
+
+        function move() {
+            const scene = scenes[currentScene];
+
+            const next = scene.choices[selectedIndex].next;
+
+            // タイトルへ戻る
+            if (next === "title") {
+                document.getElementById("gameScreen").style.display = "none";
+                document.getElementById("titleScreen").style.display = "flex";
+
+                gameStarted = false;
+                currentScene = "start";
+                selectedIndex = 0;
+
+                return;
+            }
+
+            // ★安全チェック（これ重要）
+            if (!scenes[next]) {
+                console.error("Scene not found:", next);
+                return;
+            }
+
+            currentScene = next;
+            selectedIndex = 0;
+
+            renderScene();
+        }
+
+        /* スタート */
+        function startGame() {
+            document.getElementById("titleScreen").style.display = "none";
+            document.getElementById("gameScreen").style.display = "flex";
+
+            currentScene = "start";
+            selectedIndex = 0;
+
+            renderScene();
+        }
+
+        /* キー操作 */
+        document.addEventListener("keydown", (e) => {
+
+            if (!gameStarted) {
+                if (e.key === "Enter") {
+                    gameStarted = true;
+                    startGame();
+                }
+                return;
+            }
+
+            const scene = scenes[currentScene];
+
+            if (e.key === "ArrowDown") {
+                selectedIndex = (selectedIndex + 1) % scene.choices.length;
+                updateChoicesOnly(); // ←タイピングしない
+            }
+
+            if (e.key === "ArrowUp") {
+                selectedIndex =
+                    (selectedIndex - 1 + scene.choices.length) %
+                    scene.choices.length;
+                updateChoicesOnly(); // ←タイピングしない
+            }
+
+            if (e.key === "Enter") {
+
+                if (typing) {
+                    clearInterval(interval);
+                    dialogText.textContent = fullText;
+                    typing = false;
+                    return;
+                }
+
+                move();
+            }
+        });
+
+        /* 選択肢だけ更新（重要） */
+        function updateChoicesOnly() {
+            const scene = scenes[currentScene];
+
+            choicesContainer.innerHTML = "";
+
+            scene.choices.forEach((c, i) => {
+                const div = document.createElement("div");
+                div.className = "choice";
+                if (i === selectedIndex) div.classList.add("selected");
+                div.textContent = c.text;
+                choicesContainer.appendChild(div);
+            });
+        }
+
+    </script>
+
+</body>
+
+</html>
