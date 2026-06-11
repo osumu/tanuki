@@ -30,7 +30,9 @@
             height: 100vh;
         }
 
-        #titleScreen {
+        #titleScreen,
+        #gameOverScreen,
+        #gameClearScreen {
             display: none;
             flex-direction: column;
             justify-content: center;
@@ -38,9 +40,22 @@
             background: linear-gradient(to bottom, #ffffff, #dddddd);
         }
 
+
         .game-title {
             font-size: clamp(32px, 6vw, 72px);
             margin-bottom: 30px;
+        }
+
+        .overtext {
+            font-size: clamp(32px, 6vw, 72px);
+            margin-bottom: 30px;
+            color: #ff0000;
+        }
+
+        .cleartext {
+            font-size: clamp(32px, 6vw, 72px);
+            margin-bottom: 30px;
+            color: #7d7d05;
         }
 
         .start-text {
@@ -138,6 +153,14 @@
         <div class="game-title">たぬきの運命</div>
         <div class="start-text">ENTERキーでスタート</div>
     </div>
+    <div class="screen" id="gameOverScreen">
+        <div class="overtext">GAME OVER</div>
+        <div style="font-size: clamp(16px, 3vw, 30px);">たぬきの意識は飛んだ...</div>
+    </div>
+    <div class="screen" id="gameClearScreen">
+        <div class="cleartext">GAME CLEAR</div>
+        <div style="font-size: clamp(16px, 3vw, 30px);">たぬきは無事天国へ行くことができた！</div>
+    </div>
     <div class="screen" id="gameScreen">
         <div class="image-container">
             <img id="gameImage" src="test.png" alt="game image">
@@ -150,7 +173,272 @@
         </div>
     </div>
     <script src="story.js"></script>
-    <script>const scenario = getScenario(); let currentIndex = 0; let selectedIndex = 0; let typing = false; let fullText = ""; let textIndex = 0; let typingInterval = null; const nameBox = document.getElementById("nameBox"); const dialogText = document.getElementById("dialogText"); const choicesContainer = document.getElementById("choices"); const nextMark = document.getElementById("nextMark"); const gameImage = document.getElementById("gameImage"); function findLabel(labelName) { const index = scenario.findIndex(s => s.label === labelName); if (index === -1) { console.error("Label not found:", labelName); } return index; } function showHtmlTitle() { document.getElementById("gameScreen").style.display = "none"; document.getElementById("titleScreen").style.display = "flex"; } function clearUI() { nameBox.textContent = ""; dialogText.innerHTML = ""; choicesContainer.innerHTML = ""; nextMark.style.display = "none"; } function typeText(text) { clearInterval(typingInterval); typing = true; fullText = text; textIndex = 0; dialogText.innerHTML = ""; nextMark.style.display = "none"; typingInterval = setInterval(() => { const char = fullText[textIndex]; dialogText.innerHTML += char === "\n" ? "<br>" : char; textIndex++; if (textIndex >= fullText.length) { clearInterval(typingInterval); typing = false; const current = scenario[currentIndex]; if (current.type === "message1") { nextMark.style.display = "block"; } if (current.type === "message2") { setTimeout(() => { currentIndex++; nextEvent(); }, 250); } } }, 30); } function renderChoices(choices) { choicesContainer.innerHTML = ""; choices.forEach((choice, index) => { const div = document.createElement("div"); div.className = "choice"; if (index === selectedIndex) { div.classList.add("selected"); div.textContent = "　" + choice.text; } else { div.textContent = "　" + choice.text; } choicesContainer.appendChild(div); }); } function nextEvent() { while (true) { const current = scenario[currentIndex]; if (!current) { console.error("Scenario out:", currentIndex); return; } if (current.label) { currentIndex++; continue; } if (current.image) { gameImage.src = current.image; } if (current.type === "none") { clearUI(); currentIndex++; continue; } if (current.type === "message1" || current.type === "message2") { nameBox.textContent = current.name || ""; choicesContainer.innerHTML = ""; typeText(current.text); return; } if (current.type === "choice") { nameBox.textContent = current.name || ""; dialogText.innerHTML = (current.text || "").replace(/\n/g, "<br>"); nextMark.style.display = "none"; renderChoices(current.choices); return; } currentIndex++; } } function startGame() { document.getElementById("titleScreen").style.display = "none"; document.getElementById("gameScreen").style.display = "flex"; const startIndex = findLabel("startGame"); if (startIndex === -1) { console.error("startGame label missing"); return; } currentIndex = startIndex; selectedIndex = 0; nextEvent(); } function handleEnter() { if (typing) { clearInterval(typingInterval); dialogText.innerHTML = fullText.replace(/\n/g, "<br>"); typing = false; const current = scenario[currentIndex]; if (current.type === "message1") { nextMark.style.display = "block"; } if (current.type === "message2") { setTimeout(() => { currentIndex++; nextEvent(); }, 200); } return; } const current = scenario[currentIndex]; if (current.type === "message1") { nextMark.style.display = "none"; dialogText.innerHTML = fullText.replace(/\n/g, "<br>"); currentIndex++; nextEvent(); return; } if (current.type === "choice") { const selected = current.choices[selectedIndex]; if (selected.jump === "htmlTitle" || selected.jump === "title") { showHtmlTitle(); return; } if (typeof selected.jump === "number") { currentIndex = selected.jump; } else { const jumpIndex = findLabel(selected.jump); if (jumpIndex === -1) { console.error("Jump label missing:", selected.jump); return; } currentIndex = jumpIndex; } selectedIndex = 0; nextEvent(); } } document.addEventListener("keydown", e => { if (document.getElementById("titleScreen").style.display !== "none") { if (e.key === "Enter") { startGame(); } return; } const current = scenario[currentIndex]; if (current && current.type === "choice") { if (e.key === "ArrowDown") { selectedIndex++; if (selectedIndex >= current.choices.length) { selectedIndex = 0; } renderChoices(current.choices); } if (e.key === "ArrowUp") { selectedIndex--; if (selectedIndex < 0) { selectedIndex = current.choices.length - 1; } renderChoices(current.choices); } } if (e.key === "Enter") { handleEnter(); } }); window.addEventListener("load", () => { document.getElementById("gameScreen").style.display = "flex"; document.getElementById("titleScreen").style.display = "none"; const prologueIndex = findLabel("prologue"); if (prologueIndex === -1) { console.error("prologue label missing"); return; } currentIndex = prologueIndex; nextEvent(); });</script>
+    <script>
+        const scenario = getScenario();
+        let currentIndex = 0;
+        let selectedIndex = 0;
+        let typing = false;
+        let fullText = "";
+        let textIndex = 0;
+        let typingInterval = null;
+
+        const nameBox = document.getElementById("nameBox");
+        const dialogText = document.getElementById("dialogText");
+        const choicesContainer = document.getElementById("choices");
+        const nextMark = document.getElementById("nextMark");
+        const gameImage = document.getElementById("gameImage");
+
+        function findLabel(labelName) {
+            const index = scenario.findIndex(s => s.label === labelName);
+            if (index === -1) {
+                console.error("Label not found:", labelName);
+            }
+            return index;
+        }
+
+        // --- 画面切り替え用関数 ---
+        function showHtmlTitle() {
+            hideAllScreens();
+            document.getElementById("titleScreen").style.display = "flex";
+        }
+
+        function showGameOver() {
+            hideAllScreens();
+            document.getElementById("gameOverScreen").style.display = "flex";
+        }
+
+        function showGameClear() {
+            hideAllScreens();
+            document.getElementById("gameClearScreen").style.display = "flex";
+        }
+
+        function hideAllScreens() {
+            document.getElementById("gameScreen").style.display = "none";
+            document.getElementById("titleScreen").style.display = "none";
+            if (document.getElementById("gameOverScreen")) document.getElementById("gameOverScreen").style.display = "none";
+            if (document.getElementById("gameClearScreen")) document.getElementById("gameClearScreen").style.display = "none";
+        }
+        // ------------------------
+
+        function clearUI() {
+            nameBox.textContent = "";
+            dialogText.innerHTML = "";
+            choicesContainer.innerHTML = "";
+            nextMark.style.display = "none";
+        }
+
+        function typeText(text) {
+            clearInterval(typingInterval);
+            typing = true;
+            fullText = text;
+            textIndex = 0;
+            dialogText.innerHTML = "";
+            nextMark.style.display = "none";
+            typingInterval = setInterval(() => {
+                const char = fullText[textIndex];
+                dialogText.innerHTML += char === "\n" ? "<br>" : char;
+                textIndex++;
+                if (textIndex >= fullText.length) {
+                    clearInterval(typingInterval);
+                    typing = false;
+                    const current = scenario[currentIndex];
+                    if (current.type === "message1" || current.type === "gameOver" || current.type === "gameClear") {
+                        nextMark.style.display = "block";
+                    }
+                    if (current.type === "message2") {
+                        setTimeout(() => {
+                            currentIndex++;
+                            nextEvent();
+                        }, 250);
+                    }
+                }
+            }, 30);
+        }
+
+        function renderChoices(choices) {
+            choicesContainer.innerHTML = "";
+            choices.forEach((choice, index) => {
+                const div = document.createElement("div");
+                div.className = "choice";
+                if (index === selectedIndex) {
+                    div.classList.add("selected");
+                    div.textContent = " " + choice.text;
+                } else {
+                    div.textContent = " " + choice.text;
+                }
+                choicesContainer.appendChild(div);
+            });
+        }
+
+        function nextEvent() {
+            while (true) {
+                const current = scenario[currentIndex];
+                if (!current) {
+                    console.error("Scenario out:", currentIndex);
+                    return;
+                }
+                if (current.label) {
+                    currentIndex++;
+                    continue;
+                }
+                if (current.image) {
+                    gameImage.src = current.image;
+                }
+                if (current.type === "none") {
+                    clearUI();
+                    currentIndex++;
+                    continue;
+                }
+                if (current.type === "title") {
+                    showHtmlTitle();
+                    return;
+                }
+
+                if (current.type === "message1" || current.type === "message2" || current.type === "gameOver" || current.type === "gameClear") {
+                    nameBox.textContent = current.name || "";
+                    choicesContainer.innerHTML = "";
+                    typeText(current.text || "");
+                    return;
+                }
+                if (current.type === "choice") {
+                    nameBox.textContent = current.name || "";
+                    dialogText.innerHTML = (current.text || "").replace(/\n/g, "<br>");
+                    nextMark.style.display = "none";
+                    renderChoices(current.choices);
+                    return;
+                }
+                currentIndex++;
+            }
+        }
+
+        // --- 修正: タイトルやゲームオーバーからの再開（本編から開始） ---
+        function startGame() {
+            hideAllScreens();
+            document.getElementById("gameScreen").style.display = "flex";
+
+            const startIndex = findLabel("startGame");
+            if (startIndex === -1) {
+                console.error("startGame label missing");
+                return;
+            }
+            currentIndex = startIndex;
+            selectedIndex = 0;
+            nextEvent();
+        }
+
+        // --- 追加: 初回起動時専用のプロローグ開始関数 ---
+        function startPrologue() {
+            hideAllScreens();
+            document.getElementById("gameScreen").style.display = "flex";
+
+            const startIndex = findLabel("prologue");
+            if (startIndex === -1) {
+                console.error("prologue label missing");
+                return;
+            }
+            currentIndex = startIndex;
+            selectedIndex = 0;
+            nextEvent();
+        }
+
+        function handleEnter() {
+            if (typing) {
+                clearInterval(typingInterval);
+                dialogText.innerHTML = fullText.replace(/\n/g, "<br>");
+                typing = false;
+                const current = scenario[currentIndex];
+                if (current.type === "message1" || current.type === "gameOver" || current.type === "gameClear") {
+                    nextMark.style.display = "block";
+                }
+                if (current.type === "message2") {
+                    setTimeout(() => {
+                        currentIndex++;
+                        nextEvent();
+                    }, 200);
+                }
+                return;
+            }
+
+            const current = scenario[currentIndex];
+
+            if (current.type === "gameOver") {
+                nextMark.style.display = "none";
+                showGameOver();
+                return;
+            }
+            if (current.type === "gameClear") {
+                nextMark.style.display = "none";
+                showGameClear();
+                return;
+            }
+            if (current.type === "message1") {
+                nextMark.style.display = "none";
+                dialogText.innerHTML = fullText.replace(/\n/g, "<br>");
+                currentIndex++;
+                nextEvent();
+                return;
+            }
+            if (current.type === "choice") {
+                const selected = current.choices[selectedIndex];
+                if (selected.jump === "htmlTitle" || selected.jump === "title") {
+                    showHtmlTitle();
+                    return;
+                }
+                if (typeof selected.jump === "number") {
+                    currentIndex = selected.jump;
+                } else {
+                    const jumpIndex = findLabel(selected.jump);
+                    if (jumpIndex === -1) {
+                        console.error("Jump label missing:", selected.jump);
+                        return;
+                    }
+                    currentIndex = jumpIndex;
+                }
+                selectedIndex = 0;
+                nextEvent();
+            }
+        }
+
+        document.addEventListener("keydown", e => {
+            const isTitle = document.getElementById("titleScreen").style.display === "flex";
+            const isGameOver = document.getElementById("gameOverScreen")?.style.display === "flex";
+            const isGameClear = document.getElementById("gameClearScreen")?.style.display === "flex";
+
+            // タイトル画面、ゲームオーバー、ゲームクリア画面でのエンターは「startGame」を呼ぶ
+            if (isTitle || isGameOver || isGameClear) {
+                if (e.key === "Enter") {
+                    startGame();
+                }
+                return;
+            }
+
+            const current = scenario[currentIndex];
+            if (current && current.type === "choice") {
+                if (e.key === "ArrowDown") {
+                    selectedIndex++;
+                    if (selectedIndex >= current.choices.length) {
+                        selectedIndex = 0;
+                    }
+                    renderChoices(current.choices);
+                }
+                if (e.key === "ArrowUp") {
+                    selectedIndex--;
+                    if (selectedIndex < 0) {
+                        selectedIndex = current.choices.length - 1;
+                    }
+                    renderChoices(current.choices);
+                }
+            }
+            if (e.key === "Enter") {
+                handleEnter();
+            }
+        });
+
+        // --- 修正: ロード完了時はタイトルを挟まず、すぐにプロローグを始める ---
+        window.addEventListener("load", () => {
+            startPrologue();
+        });
+    </script>
 </body>
 
 </html>
