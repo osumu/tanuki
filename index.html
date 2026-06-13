@@ -47,9 +47,10 @@
         }
 
         .overtext {
-            font-size: clamp(32px, 6vw, 72px);
+            font-size: clamp(200px, 174vw, 240px);
             margin-bottom: 30px;
             color: #ff0000;
+            user-select: none;
         }
 
         .cleartext {
@@ -149,13 +150,17 @@
 </head>
 
 <body>
+    <div id="startScreen" style="display: flex; justify-content: center; align-items: center; cursor: pointer;">
+        <img id="startImage" src="start.png" alt="Start" style="max-width: 100%; max-height: 100%;">
+    </div>
     <div class="screen" id="titleScreen">
         <div class="game-title">たぬきの運命</div>
         <div class="start-text">ENTERキーでスタート</div>
     </div>
-    <div class="screen" id="gameOverScreen">
-        <div class="overtext">GAME OVER</div>
-        <div style="font-size: clamp(16px, 3vw, 30px);">たぬきの意識は飛んだ...</div>
+    <div class="screen" id="gameOverScreen"
+        style="background-color:#2b2b2b;background-image:url(tnkgameover.png);background-size:contain;background-position:center;background-repeat:2;">
+        <div class="overtext">GAME</div>
+        <div class="overtext">OVER</div>
     </div>
     <div class="screen" id="gameClearScreen">
         <div class="cleartext">GAME CLEAR</div>
@@ -196,7 +201,6 @@
             return index;
         }
 
-        // --- 画面切り替え用関数 ---
         function showHtmlTitle() {
             hideAllScreens();
             document.getElementById("titleScreen").style.display = "flex";
@@ -215,10 +219,10 @@
         function hideAllScreens() {
             document.getElementById("gameScreen").style.display = "none";
             document.getElementById("titleScreen").style.display = "none";
+            if (document.getElementById("startScreen")) document.getElementById("startScreen").style.display = "none";
             if (document.getElementById("gameOverScreen")) document.getElementById("gameOverScreen").style.display = "none";
             if (document.getElementById("gameClearScreen")) document.getElementById("gameClearScreen").style.display = "none";
         }
-        // ------------------------
 
         function clearUI() {
             nameBox.textContent = "";
@@ -242,7 +246,7 @@
                     clearInterval(typingInterval);
                     typing = false;
                     const current = scenario[currentIndex];
-                    if (current.type === "message1" || current.type === "gameOver" || current.type === "gameClear") {
+                    if (current.type === "message1" || current.type === "gameOver" || current.type === "gameClear" || current.type === "cimg") {
                         nextMark.style.display = "block";
                     }
                     if (current.type === "message2") {
@@ -294,7 +298,7 @@
                     return;
                 }
 
-                if (current.type === "message1" || current.type === "message2" || current.type === "gameOver" || current.type === "gameClear") {
+                if (current.type === "message1" || current.type === "message2" || current.type === "gameOver" || current.type === "gameClear" || current.type === "cimg") {
                     nameBox.textContent = current.name || "";
                     choicesContainer.innerHTML = "";
                     typeText(current.text || "");
@@ -311,7 +315,6 @@
             }
         }
 
-        // --- 修正: タイトルやゲームオーバーからの再開（本編から開始） ---
         function startGame() {
             hideAllScreens();
             document.getElementById("gameScreen").style.display = "flex";
@@ -326,7 +329,6 @@
             nextEvent();
         }
 
-        // --- 追加: 初回起動時専用のプロローグ開始関数 ---
         function startPrologue() {
             hideAllScreens();
             document.getElementById("gameScreen").style.display = "flex";
@@ -347,7 +349,7 @@
                 dialogText.innerHTML = fullText.replace(/\n/g, "<br>");
                 typing = false;
                 const current = scenario[currentIndex];
-                if (current.type === "message1" || current.type === "gameOver" || current.type === "gameClear") {
+                if (current.type === "message1" || current.type === "gameOver" || current.type === "gameClear" || current.type === "cimg") {
                     nextMark.style.display = "block";
                 }
                 if (current.type === "message2") {
@@ -371,7 +373,7 @@
                 showGameClear();
                 return;
             }
-            if (current.type === "message1") {
+            if (current.type === "message1" || current.type === "cimg") {
                 nextMark.style.display = "none";
                 dialogText.innerHTML = fullText.replace(/\n/g, "<br>");
                 currentIndex++;
@@ -400,11 +402,13 @@
         }
 
         document.addEventListener("keydown", e => {
+            const isStart = document.getElementById("startScreen")?.style.display === "flex";
             const isTitle = document.getElementById("titleScreen").style.display === "flex";
             const isGameOver = document.getElementById("gameOverScreen")?.style.display === "flex";
             const isGameClear = document.getElementById("gameClearScreen")?.style.display === "flex";
 
-            // タイトル画面、ゲームオーバー、ゲームクリア画面でのエンターは「startGame」を呼ぶ
+            if (isStart) return;
+
             if (isTitle || isGameOver || isGameClear) {
                 if (e.key === "Enter") {
                     startGame();
@@ -413,6 +417,13 @@
             }
 
             const current = scenario[currentIndex];
+
+            if (current && current.type === "cimg" && current.key) {
+                if (e.key === current.key) {
+                    gameImage.src = current.image2;
+                }
+            }
+
             if (current && current.type === "choice") {
                 if (e.key === "ArrowDown") {
                     selectedIndex++;
@@ -434,9 +445,17 @@
             }
         });
 
-        // --- 修正: ロード完了時はタイトルを挟まず、すぐにプロローグを始める ---
         window.addEventListener("load", () => {
-            startPrologue();
+            hideAllScreens();
+            const startScreen = document.getElementById("startScreen");
+            if (startScreen) {
+                startScreen.style.display = "flex";
+                startScreen.addEventListener("click", () => {
+                    startPrologue();
+                }, { once: true });
+            } else {
+                startPrologue();
+            }
         });
     </script>
 </body>
