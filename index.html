@@ -42,10 +42,118 @@
             overflow: hidden;
             justify-content: center;
             align-items: center;
+            background: #ffffff !important;
         }
 
-        #titleScreen,
-        #gameOverScreen,
+        #titleScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #ffffff !important;
+            z-index: 4000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .img-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .img-wrapper img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            border: none;
+        }
+
+        #HowToPlayScreen,
+        #SettingsScreen {
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background: #111111;
+            color: #ffffff;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+
+        .sub-title {
+            font-size: clamp(24px, 4vw, 36px);
+            color: #ffd700;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #ffd700;
+            padding-bottom: 8px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .content-box {
+            width: 100%;
+            max-width: 500px;
+            background: #222222;
+            border: 2px solid #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: clamp(14px, 2.5vw, 18px);
+            line-height: 1.6;
+        }
+
+        .content-box h3 {
+            margin-top: 0;
+            color: #a9a9a9;
+            font-size: clamp(16px, 3vw, 20px);
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .setting-btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .back-btn,
+        .config-btn {
+            font-family: 'PixelMplus', sans-serif;
+            background: #ffffff;
+            color: #111111;
+            border: 2px solid #ffffff;
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .config-btn.active {
+            background: #ffd700;
+            border-color: #ffd700;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: #ffd700;
+            border-color: #ffd700;
+        }
+
         #gameClearScreen {
             display: none;
             flex-direction: column;
@@ -54,42 +162,29 @@
             background: linear-gradient(to bottom, #ffffff, #dddddd);
         }
 
-
-        .game-title {
-            font-size: clamp(32px, 6vw, 72px);
-            margin-bottom: 30px;
+        #gameOverScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000000 !important;
+            z-index: 5000;
+            margin: 0;
+            padding: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
         }
 
-        .overtext {
-            font-size: clamp(200px, 174vw, 240px);
-            margin-bottom: 30px;
-            color: #ff0000;
-            user-select: none;
+        area {
+            cursor: pointer;
         }
 
         .cleartext {
             font-size: clamp(32px, 6vw, 72px);
             margin-bottom: 30px;
             color: #7d7d05;
-        }
-
-        .start-text {
-            font-size: clamp(16px, 3vw, 30px);
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.3;
-            }
-
-            100% {
-                opacity: 1;
-            }
         }
 
         #gameScreen {
@@ -143,7 +238,7 @@
         }
 
         .choice::before {
-            content: "　";
+            content: " ";
             margin-right: 8px;
         }
 
@@ -165,25 +260,79 @@
 
 <body>
     <div id="startScreen">
-        <img id="startImage" src="start.png" alt="Start" style="
-        width: 100%; 
-        height: 100%; 
-        object-fit: contain;
-    ">
+        <div class="img-wrapper">
+            <img id="startImage" src="start.png" alt="Start">
+        </div>
     </div>
+
     <div class="screen" id="titleScreen">
-        <div class="game-title">たぬきの運命</div>
-        <div class="start-text">ENTERキーでスタート</div>
+        <div class="img-wrapper">
+            <img id="title-image" src="startscreen.png" usemap="#TitleMap" alt="Title">
+            <map name="TitleMap" id="TitleMap">
+                <area id="title-area1" shape="rect" coords="117,119,187,144"
+                    onclick="event.preventDefault(); startGame();" alt="Start">
+                <area id="title-area2" shape="rect" coords="118,165,189,188"
+                    onclick="event.preventDefault(); showHtmlTitle();" alt="Title">
+                <area id="title-area3" shape="rect" coords="115,207,190,234"
+                    onclick="event.preventDefault(); showHowToPlay();" alt="How to Play">
+                <area id="title-area4" shape="rect" coords="116,254,194,283"
+                    onclick="event.preventDefault(); showSettings();" alt="Settings">
+            </map>
+        </div>
     </div>
-    <div class="screen" id="gameOverScreen"
-        style="background-color:#2b2b2b;background-image:url(tnkgameover.png);background-size:contain;background-position:center;background-repeat:2;">
-        <div class="overtext">GAME</div>
-        <div class="overtext">OVER</div>
+
+    <div class="screen" id="HowToPlayScreen">
+        <div class="sub-title">遊び方</div>
+        <div class="content-box">
+            <h3>■ ゲーム目的</h3>
+            <p>主人公の「たぬき」の運命を決める選択肢型ノベルゲームです。あなたの選んだ道によって、たぬきが天国へ行けるか、あるいは恐ろしいゲームオーバーを迎えるかが決まります。</p>
+            <h3>■ 操作方法（スマホ）</h3>
+            <p>・画面をタップ：話を進める<br>・選択肢をタップ：決定</p>
+            <h3>■ 操作方法（PC）</h3>
+            <p>・ENTERキー：話を進める<br>・矢印キー（↑↓）：選択肢の移動<br>・ENTERキー：選択肢の決定</p>
+        </div>
+        <button class="back-btn" onclick="showHtmlTitle()">タイトルに戻る</button>
     </div>
+
+    <div class="screen" id="SettingsScreen">
+        <div class="sub-title">設定</div>
+        <div class="content-box">
+            <div class="setting-item">
+                <span>文字送り速度</span>
+                <div class="setting-btn-group">
+                    <button id="speed-fast" class="config-btn" onclick="changeTextSpeed('fast')">速い</button>
+                    <button id="speed-normal" class="config-btn active" onclick="changeTextSpeed('normal')">普通</button>
+                    <button id="speed-slow" class="config-btn" onclick="changeTextSpeed('slow')">遅い</button>
+                </div>
+            </div>
+            <div class="setting-item">
+                <span>進捗を保存する</span>
+                <div class="setting-btn-group">
+                    <button id="save-on" class="config-btn" onclick="toggleSaveProgress(true)">ON</button>
+                    <button id="save-off" class="config-btn active" onclick="toggleSaveProgress(false)">OFF</button>
+                </div>
+            </div>
+        </div>
+        <button class="back-btn" onclick="showHtmlTitle()">タイトルに戻る</button>
+    </div>
+
+    <div class="screen" id="gameOverScreen">
+        <div class="img-wrapper" id="go-img-wrapper">
+            <img id="go-image" src="gameover.png" usemap="#GameOverMap" alt="Game Over">
+            <map name="GameOverMap" id="GameOverMap">
+                <area id="go-area1" shape="rect" coords="118,151,278,188"
+                    onclick="event.preventDefault(); triggerGameOver2();" alt="Game Over 2">
+                <area id="go-area2" shape="rect" coords="116,219,280,254"
+                    onclick="event.preventDefault(); resetGameOverUI(); startPrologue();" alt="Start Game">
+            </map>
+        </div>
+    </div>
+
     <div class="screen" id="gameClearScreen">
         <div class="cleartext">GAME CLEAR</div>
         <div style="font-size: clamp(16px, 3vw, 30px);">たぬきは無事天国へ行くことができた！</div>
     </div>
+
     <div class="screen" id="gameScreen">
         <div class="image-container">
             <img id="gameImage" src="test.png" alt="game image">
@@ -195,6 +344,7 @@
             <div id="nextMark">▼</div>
         </div>
     </div>
+
     <script src="story.js"></script>
     <script>
         const scenario = getScenario();
@@ -204,6 +354,13 @@
         let fullText = "";
         let textIndex = 0;
         let typingInterval = null;
+        let typingFinished = null;
+
+        let textSpeed = 30;
+        let goBaseWidth = 431;
+        let goBaseHeight = 600;
+
+        let saveProgressEnabled = false;
 
         const nameBox = document.getElementById("nameBox");
         const dialogText = document.getElementById("dialogText");
@@ -222,16 +379,82 @@
         function showHtmlTitle() {
             hideAllScreens();
             document.getElementById("titleScreen").style.display = "flex";
+            setTimeout(resizeAllMaps, 50);
         }
 
         function showGameOver() {
             hideAllScreens();
-            document.getElementById("gameOverScreen").style.display = "flex";
+            const goScreen = document.getElementById("gameOverScreen");
+            if (goScreen) {
+                goScreen.style.display = "flex";
+                resetGameOverUI();
+            }
         }
 
         function showGameClear() {
             hideAllScreens();
             document.getElementById("gameClearScreen").style.display = "flex";
+            if (saveProgressEnabled) {
+                localStorage.removeItem("tanuki_game_progress");
+            }
+        }
+
+        function showHowToPlay() {
+            hideAllScreens();
+            document.getElementById("HowToPlayScreen").style.display = "flex";
+        }
+
+        function showSettings() {
+            hideAllScreens();
+            document.getElementById("SettingsScreen").style.display = "flex";
+        }
+
+        function changeTextSpeed(speed) {
+            document.getElementById("speed-fast").classList.remove("active");
+            document.getElementById("speed-normal").classList.remove("active");
+            document.getElementById("speed-slow").classList.remove("active");
+
+            if (speed === 'fast') {
+                textSpeed = 10;
+                document.getElementById("speed-fast").classList.add("active");
+            } else if (speed === 'normal') {
+                textSpeed = 30;
+                document.getElementById("speed-normal").classList.add("active");
+            } else if (speed === 'slow') {
+                textSpeed = 60;
+                document.getElementById("speed-slow").classList.add("active");
+            }
+        }
+
+        function toggleSaveProgress(enabled) {
+            saveProgressEnabled = enabled;
+            document.getElementById("save-on").classList.remove("active");
+            document.getElementById("save-off").classList.remove("active");
+
+            if (enabled) {
+                document.getElementById("save-on").classList.add("active");
+                localStorage.setItem("tanuki_save_enabled", "true");
+                saveCurrentProgress();
+            } else {
+                document.getElementById("save-off").classList.add("active");
+                localStorage.setItem("tanuki_save_enabled", "false");
+                localStorage.removeItem("tanuki_game_progress");
+            }
+        }
+
+        function saveCurrentProgress() {
+            if (saveProgressEnabled) {
+                localStorage.setItem("tanuki_game_progress", currentIndex);
+            }
+        }
+
+        function loadSettingsAndProgress() {
+            const savedEnabled = localStorage.getItem("tanuki_save_enabled");
+            if (savedEnabled === "true") {
+                toggleSaveProgress(true);
+            } else {
+                toggleSaveProgress(false);
+            }
         }
 
         function hideAllScreens() {
@@ -240,6 +463,93 @@
             if (document.getElementById("startScreen")) document.getElementById("startScreen").style.display = "none";
             if (document.getElementById("gameOverScreen")) document.getElementById("gameOverScreen").style.display = "none";
             if (document.getElementById("gameClearScreen")) document.getElementById("gameClearScreen").style.display = "none";
+            if (document.getElementById("HowToPlayScreen")) document.getElementById("HowToPlayScreen").style.display = "none";
+            if (document.getElementById("SettingsScreen")) document.getElementById("SettingsScreen").style.display = "none";
+        }
+
+        function calculateMapCoords(imgId, baseWidth, baseHeight, coordsData) {
+            const img = document.getElementById(imgId);
+            if (!img || img.clientWidth === 0 || !img.getAttribute("usemap")) return;
+
+            const containerWidth = window.innerWidth;
+            const containerHeight = window.innerHeight;
+
+            const containerRatio = containerWidth / containerHeight;
+            const baseRatio = baseWidth / baseHeight;
+
+            let scale = 1;
+            let actualImgWidth = containerWidth;
+            let actualImgHeight = containerHeight;
+
+            if (containerRatio > baseRatio) {
+                scale = containerHeight / baseHeight;
+                actualImgWidth = baseWidth * scale;
+            } else {
+                scale = containerWidth / baseWidth;
+                actualImgHeight = baseHeight * scale;
+            }
+
+            const offsetX = (containerWidth - actualImgWidth) / 2;
+            const offsetY = (containerHeight - actualImgHeight) / 2;
+
+            for (let id in coordsData) {
+                const area = document.getElementById(id);
+                if (area) {
+                    const coords = coordsData[id];
+                    const scaledCoords = [
+                        Math.round(coords[0] * scale + offsetX),
+                        Math.round(coords[1] * scale + offsetY),
+                        Math.round(coords[2] * scale + offsetX),
+                        Math.round(coords[3] * scale + offsetY)
+                    ];
+                    area.coords = scaledCoords.join(",");
+                }
+            }
+        }
+
+        function resizeAllMaps() {
+            calculateMapCoords("title-image", 320, 399, {
+                "title-area1": [117, 119, 187, 144],
+                "title-area2": [118, 165, 189, 188],
+                "title-area3": [115, 207, 190, 234],
+                "title-area4": [116, 254, 194, 283]
+            });
+            calculateMapCoords("go-image", goBaseWidth, goBaseHeight, {
+                "go-area1": [118, 151, 278, 188],
+                "go-area2": [116, 219, 280, 254]
+            });
+        }
+
+        window.addEventListener("resize", resizeAllMaps);
+        window.addEventListener("orientationchange", () => {
+            setTimeout(resizeAllMaps, 200);
+        });
+
+        function resetGameOverUI() {
+            const currentImg = document.getElementById("go-image");
+            if (!currentImg) return;
+
+            goBaseWidth = 431;
+            goBaseHeight = 600;
+
+            currentImg.src = "gameover.png";
+            currentImg.setAttribute("usemap", "#GameOverMap");
+
+            setTimeout(resizeAllMaps, 50);
+        }
+
+        function triggerGameOver2() {
+            const currentImg = document.getElementById("go-image");
+            if (currentImg) {
+                let tempImg = new Image();
+                tempImg.onload = () => {
+                    goBaseWidth = 422;
+                    goBaseHeight = 951;
+                    currentImg.src = tempImg.src;
+                    currentImg.removeAttribute("usemap");
+                };
+                tempImg.src = "gameover2.png";
+            }
         }
 
         function clearUI() {
@@ -256,38 +566,62 @@
             textIndex = 0;
             dialogText.innerHTML = "";
             nextMark.style.display = "none";
+
             typingInterval = setInterval(() => {
                 const char = fullText[textIndex];
                 dialogText.innerHTML += char === "\n" ? "<br>" : char;
                 textIndex++;
+
                 if (textIndex >= fullText.length) {
                     clearInterval(typingInterval);
                     typing = false;
+
                     const current = scenario[currentIndex];
-                    if (current.type === "message1" || current.type === "gameOver" || current.type === "gameClear" || current.type === "cimg") {
+
+                    if (
+                        current.type === "message1" ||
+                        current.type === "gameOver" ||
+                        current.type === "gameClear" ||
+                        current.type === "cimg"
+                    ) {
                         nextMark.style.display = "block";
                     }
+
+                    if (current.type === "choice") {
+                        showChoices(current.choices);
+                    }
+
                     if (current.type === "message2") {
                         setTimeout(() => {
                             currentIndex++;
+                            saveCurrentProgress();
                             nextEvent();
                         }, 250);
                     }
                 }
-            }, 30);
+            }, textSpeed);
         }
+
 
         function renderChoices(choices) {
             choicesContainer.innerHTML = "";
             choices.forEach((choice, index) => {
                 const div = document.createElement("div");
                 div.className = "choice";
+                div.style.cursor = "pointer";
                 if (index === selectedIndex) {
                     div.classList.add("selected");
-                    div.textContent = " " + choice.text;
+                    div.textContent = "　" + choice.text;
                 } else {
-                    div.textContent = " " + choice.text;
+                    div.textContent = "　　" + choice.text;
                 }
+                div.addEventListener("click", () => {
+                    selectedIndex = index;
+                    renderChoices(choices);
+                    setTimeout(() => {
+                        handleEnter();
+                    }, 100);
+                });
                 choicesContainer.appendChild(div);
             });
         }
@@ -315,7 +649,6 @@
                     showHtmlTitle();
                     return;
                 }
-
                 if (current.type === "message1" || current.type === "message2" || current.type === "gameOver" || current.type === "gameClear" || current.type === "cimg") {
                     nameBox.textContent = current.name || "";
                     choicesContainer.innerHTML = "";
@@ -324,11 +657,14 @@
                 }
                 if (current.type === "choice") {
                     nameBox.textContent = current.name || "";
-                    dialogText.innerHTML = (current.text || "").replace(/\n/g, "<br>");
                     nextMark.style.display = "none";
-                    renderChoices(current.choices);
+                    typeText(current.text || "");
+                    typingFinished = () => {
+                        renderChoices(current.choices);
+                    }
                     return;
                 }
+
                 currentIndex++;
             }
         }
@@ -336,6 +672,14 @@
         function startGame() {
             hideAllScreens();
             document.getElementById("gameScreen").style.display = "flex";
+
+            const savedProgress = localStorage.getItem("tanuki_game_progress");
+            if (saveProgressEnabled && savedProgress !== null) {
+                currentIndex = parseInt(savedProgress, 10);
+                selectedIndex = 0;
+                nextEvent();
+                return;
+            }
 
             const startIndex = findLabel("startGame");
             if (startIndex === -1) {
@@ -350,7 +694,6 @@
         function startPrologue() {
             hideAllScreens();
             document.getElementById("gameScreen").style.display = "flex";
-
             const startIndex = findLabel("prologue");
             if (startIndex === -1) {
                 console.error("prologue label missing");
@@ -373,6 +716,7 @@
                 if (current.type === "message2") {
                     setTimeout(() => {
                         currentIndex++;
+                        saveCurrentProgress();
                         nextEvent();
                     }, 200);
                 }
@@ -380,7 +724,6 @@
             }
 
             const current = scenario[currentIndex];
-
             if (current.type === "gameOver") {
                 nextMark.style.display = "none";
                 showGameOver();
@@ -395,6 +738,7 @@
                 nextMark.style.display = "none";
                 dialogText.innerHTML = fullText.replace(/\n/g, "<br>");
                 currentIndex++;
+                saveCurrentProgress();
                 nextEvent();
                 return;
             }
@@ -415,6 +759,7 @@
                     currentIndex = jumpIndex;
                 }
                 selectedIndex = 0;
+                saveCurrentProgress();
                 nextEvent();
             }
         }
@@ -424,13 +769,19 @@
             const isTitle = document.getElementById("titleScreen").style.display === "flex";
             const isGameOver = document.getElementById("gameOverScreen")?.style.display === "flex";
             const isGameClear = document.getElementById("gameClearScreen")?.style.display === "flex";
+            const isHowTo = document.getElementById("HowToPlayScreen").style.display === "flex";
+            const isSettings = document.getElementById("SettingsScreen").style.display === "flex";
 
-            if (isStart) return;
-
-            if (isTitle || isGameOver || isGameClear) {
-                if (e.key === "Enter") {
-                    startGame();
-                }
+            if (isStart) {
+                if (e.key === "Enter") startPrologue();
+                return;
+            }
+            if (isGameOver) {
+                if (e.key === "ArrowUp") triggerGameOver2();
+                return;
+            }
+            if (isTitle || isGameClear || isHowTo || isSettings) {
+                if (e.key === "Enter" && isTitle) startGame();
                 return;
             }
 
@@ -445,16 +796,12 @@
             if (current && current.type === "choice") {
                 if (e.key === "ArrowDown") {
                     selectedIndex++;
-                    if (selectedIndex >= current.choices.length) {
-                        selectedIndex = 0;
-                    }
+                    if (selectedIndex >= current.choices.length) selectedIndex = 0;
                     renderChoices(current.choices);
                 }
                 if (e.key === "ArrowUp") {
                     selectedIndex--;
-                    if (selectedIndex < 0) {
-                        selectedIndex = current.choices.length - 1;
-                    }
+                    if (selectedIndex < 0) selectedIndex = current.choices.length - 1;
                     renderChoices(current.choices);
                 }
             }
@@ -465,11 +812,24 @@
 
         window.addEventListener("load", () => {
             hideAllScreens();
+            loadSettingsAndProgress();
+
             if (nextMark) {
                 nextMark.addEventListener("click", () => {
                     handleEnter();
                 });
                 nextMark.style.cursor = "pointer";
+            }
+
+            const titleImg = document.getElementById("title-image");
+            if (titleImg) {
+                if (titleImg.complete) { resizeAllMaps(); }
+                else { titleImg.addEventListener("load", resizeAllMaps); }
+            }
+            const goImg = document.getElementById("go-image");
+            if (goImg) {
+                if (goImg.complete) { resizeAllMaps(); }
+                else { goImg.addEventListener("load", resizeAllMaps); }
             }
 
             const startScreen = document.getElementById("startScreen");
