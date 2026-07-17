@@ -45,6 +45,65 @@
             background: #ffffff !important;
         }
 
+        /* 右上の保存ボタン */
+        .save-trigger-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            font-family: 'PixelMplus', sans-serif;
+            background: rgba(0, 0, 0, 0.7);
+            color: #ffd700;
+            border: 2px solid #ffd700;
+            padding: 6px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .save-trigger-btn:hover {
+            background: #ffd700;
+            color: #111;
+        }
+
+        /* 保存完了メッセージのポップアップ */
+        #save-toast {
+            position: fixed;
+            top: 50px;
+            right: 10px;
+            z-index: 1001;
+            background: rgba(0, 128, 0, 0.9);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'PixelMplus', sans-serif;
+            display: none;
+            animation: fadeinout 2s forwards;
+        }
+
+        @keyframes fadeinout {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            15% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            85% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
         #titleScreen {
             display: none;
             position: fixed;
@@ -308,8 +367,8 @@
             <div class="setting-item">
                 <span>進捗を保存する</span>
                 <div class="setting-btn-group">
-                    <button id="save-on" class="config-btn" onclick="toggleSaveProgress(true)">ON</button>
-                    <button id="save-off" class="config-btn active" onclick="toggleSaveProgress(false)">OFF</button>
+                    <button id="save-on" class="config-btn" onclick="toggleSettings(true)">ON</button>
+                    <button id="save-off" class="config-btn active" onclick="toggleSettings(false)">OFF</button>
                 </div>
             </div>
         </div>
@@ -334,6 +393,8 @@
     </div>
 
     <div class="screen" id="gameScreen">
+        <button class="save-trigger-btn" onclick="manualSaveProgress()">セーブ</button>
+        <div id="save-toast">進捗を保存しました！</div>
         <div class="image-container">
             <img id="gameImage" src="test.png" alt="game image">
         </div>
@@ -375,6 +436,20 @@
             }
             return index;
         }
+        function manualSaveProgress() {
+            if (!saveProgressEnabled) {
+                alert("設定で「進捗を保存する」を ON に設定してから保存してください。");
+                return;
+            }
+            localStorage.setItem("tanuki_game_progress", currentIndex);
+            const toast = document.getElementById("save-toast");
+            if (toast) {
+                toast.style.display = "block";
+                setTimeout(() => {
+                    toast.style.display = "none";
+                }, 2000);
+            }
+        }
 
         function showHtmlTitle() {
             hideAllScreens();
@@ -406,54 +481,120 @@
 
         function showSettings() {
             hideAllScreens();
+            loadSettingsAndProgress();
             document.getElementById("SettingsScreen").style.display = "flex";
         }
 
         function changeTextSpeed(speed) {
-            document.getElementById("speed-fast").classList.remove("active");
-            document.getElementById("speed-normal").classList.remove("active");
-            document.getElementById("speed-slow").classList.remove("active");
+            const speedFast = document.getElementById("speed-fast");
+            const speedNormal = document.getElementById("speed-normal");
+            const speedSlow = document.getElementById("speed-slow");
 
-            if (speed === 'fast') {
-                textSpeed = 10;
-                document.getElementById("speed-fast").classList.add("active");
-            } else if (speed === 'normal') {
-                textSpeed = 30;
-                document.getElementById("speed-normal").classList.add("active");
-            } else if (speed === 'slow') {
-                textSpeed = 60;
-                document.getElementById("speed-slow").classList.add("active");
+            if (speedFast && speedNormal && speedSlow) {
+                speedFast.classList.remove("active");
+                speedNormal.classList.remove("active");
+                speedSlow.classList.remove("active");
+
+                if (speed === 'fast') {
+                    textSpeed = 10;
+                    speedFast.classList.add("active");
+                    localStorage.setItem("tanuki_text_speed", "10"); // ローカルストレージに保存
+                } else if (speed === 'slow') {
+                    textSpeed = 60;
+                    speedSlow.classList.add("active");
+                    localStorage.setItem("tanuki_text_speed", "60"); // ローカルストレージに保存
+                } else {
+                    textSpeed = 30;
+                    speedNormal.classList.add("active");
+                    localStorage.setItem("tanuki_text_speed", "30"); // ローカルストレージに保存
+                }
             }
         }
 
-        function toggleSaveProgress(enabled) {
+        // ==========================================
+        // 2. 進捗保存ON/OFFの切り替え
+        // ==========================================
+        function toggleSettings(enabled) {
             saveProgressEnabled = enabled;
-            document.getElementById("save-on").classList.remove("active");
-            document.getElementById("save-off").classList.remove("active");
 
-            if (enabled) {
-                document.getElementById("save-on").classList.add("active");
-                localStorage.setItem("tanuki_save_enabled", "true");
-                saveCurrentProgress();
-            } else {
-                document.getElementById("save-off").classList.add("active");
-                localStorage.setItem("tanuki_save_enabled", "false");
-                localStorage.removeItem("tanuki_game_progress");
+            const btnOn = document.getElementById("save-on");
+            const btnOff = document.getElementById("save-off");
+
+            if (btnOn && btnOff) {
+                btnOn.classList.remove("active");
+                btnOff.classList.remove("active");
+
+                if (enabled) {
+                    btnOn.classList.add("active");
+                    localStorage.setItem("tanuki_save_enabled", "true");
+
+                    const gameScreen = document.getElementById("gameScreen");
+                    if (gameScreen && gameScreen.style.display === "flex") {
+                        saveCurrentProgress();
+                    }
+                } else {
+                    btnOff.classList.add("active");
+                    localStorage.setItem("tanuki_save_enabled", "false");
+                    localStorage.removeItem("tanuki_game_progress"); // OFF時は進捗を即時削除
+                }
+            }
+        }
+
+        // ==========================================
+        // 3. 設定と進捗の読み込み（起動時＆設定画面を開いたときに実行）
+        // ==========================================
+        function loadSettingsAndProgress() {
+            // --- ① 進捗保存設定の読み込み ---
+            const btnOn = document.getElementById("save-on");
+            const btnOff = document.getElementById("save-off");
+
+            if (btnOn && btnOff) {
+                btnOn.classList.remove("active");
+                btnOff.classList.remove("active");
+
+                const savedEnabled = localStorage.getItem("tanuki_save_enabled");
+                if (savedEnabled === "true") {
+                    saveProgressEnabled = true;
+                    btnOn.classList.add("active");
+                } else {
+                    saveProgressEnabled = false;
+                    btnOff.classList.add("active");
+                    localStorage.setItem("tanuki_save_enabled", "false"); // デフォルトはOFF
+                }
+            }
+
+            // --- ② 文字送り速度の読み込み ---
+            const speedFast = document.getElementById("speed-fast");
+            const speedNormal = document.getElementById("speed-normal");
+            const speedSlow = document.getElementById("speed-slow");
+
+            if (speedFast && speedNormal && speedSlow) {
+                speedFast.classList.remove("active");
+                speedNormal.classList.remove("active");
+                speedSlow.classList.remove("active");
+
+                // localStorageから保存された速度を取得
+                const savedSpeed = localStorage.getItem("tanuki_text_speed");
+                if (savedSpeed !== null) {
+                    textSpeed = parseInt(savedSpeed, 10);
+                } else {
+                    textSpeed = 30; // 保存データがない場合はデフォルト30（普通）
+                }
+
+                // 取得した速度に応じてボタンを点灯
+                if (textSpeed === 10) {
+                    speedFast.classList.add("active");
+                } else if (textSpeed === 60) {
+                    speedSlow.classList.add("active");
+                } else {
+                    speedNormal.classList.add("active");
+                }
             }
         }
 
         function saveCurrentProgress() {
             if (saveProgressEnabled) {
                 localStorage.setItem("tanuki_game_progress", currentIndex);
-            }
-        }
-
-        function loadSettingsAndProgress() {
-            const savedEnabled = localStorage.getItem("tanuki_save_enabled");
-            if (savedEnabled === "true") {
-                toggleSaveProgress(true);
-            } else {
-                toggleSaveProgress(false);
             }
         }
 
@@ -587,9 +728,14 @@
                         nextMark.style.display = "block";
                     }
 
-                    if (current.type === "choice") {
-                        showChoices(current.choices);
+                    if (typeof typingFinished === "function") {
+                        typingFinished();
+                        typingFinished = null;
                     }
+
+                    /*if (current.type === "choice") {
+                        showChoices(current.choices);
+                    }*/
 
                     if (current.type === "message2") {
                         setTimeout(() => {
@@ -688,6 +834,8 @@
             }
             currentIndex = startIndex;
             selectedIndex = 0;
+
+            saveCurrentProgress();
             nextEvent();
         }
 
@@ -701,6 +849,9 @@
             }
             currentIndex = startIndex;
             selectedIndex = 0;
+            if (saveProgressEnabled) {
+                saveCurrentProgress();
+            }
             nextEvent();
         }
 
@@ -813,6 +964,14 @@
         window.addEventListener("load", () => {
             hideAllScreens();
             loadSettingsAndProgress();
+
+            if (saveProgressEnabled) {
+                const savedIndex = localStorage.getItem("tanuki_game_progress");
+                if (savedIndex !== null) {
+                    currentIndex = parseInt(savedIndex, 10);
+                }
+            }
+
 
             if (nextMark) {
                 nextMark.addEventListener("click", () => {
