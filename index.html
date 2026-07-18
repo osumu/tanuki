@@ -47,6 +47,7 @@
 
         /* 右上の保存ボタン */
         .save-trigger-btn {
+            display: block;
             position: absolute;
             top: 10px;
             right: 10px;
@@ -388,8 +389,8 @@
     </div>
 
     <div class="screen" id="gameClearScreen">
-        <div class="cleartext">GAME CLEAR</div>
-        <div style="font-size: clamp(16px, 3vw, 30px);">たぬきは無事天国へ行くことができた！</div>
+        <div class="cleartext">開発者</div>
+        <div style="font-size: clamp(16px, 3vw, 30px);">ここまでしかつくってないよーん</div>
     </div>
 
     <div class="screen" id="gameScreen">
@@ -438,7 +439,7 @@
         }
         function manualSaveProgress() {
             if (!saveProgressEnabled) {
-                alert("設定で「進捗を保存する」を ON に設定してから保存してください。");
+                document.getElementsByClassName("save-trigger-btn").style.display = "none";
                 return;
             }
             localStorage.setItem("tanuki_game_progress", currentIndex);
@@ -700,54 +701,187 @@
             nextMark.style.display = "none";
         }
 
+        // タイピング中の全セグメントを保持する変数
+        let currentSegments = [];
+        // スキップした直後の誤作動を防ぐためのフラグ
+        let justSkipped = false;
+        let message2Timeout = null;
+
         function typeText(text) {
             clearInterval(typingInterval);
             typing = true;
+            justSkipped = false;
             fullText = text;
             textIndex = 0;
             dialogText.innerHTML = "";
             nextMark.style.display = "none";
 
+            currentSegments = [];
+
+            // タグ全体を確実に1つずつ切り出す安全な正規表現
+            const regex = /\[style=['"]([^'"]*?)['"]\]([^\]]*?)\]/g;
+
+            let lastIndex = 0;
+            let match;
+
+            while ((match = regex.exec(text)) !== null) {
+                if (match.index > lastIndex) {
+                    const plainText = text.substring(lastIndex, match.index);
+                    for (let char of plainText) {
+                        currentSegments.push({ type: 'plain', value: char });
+                    }
+                }
+
+                currentSegments.push({
+                    type: 'style',
+                    style: match[1],
+                    value: match[2]
+                });
+
+                lastIndex = regex.lastIndex;
+            }
+
+            if (lastIndex < text.length) {
+                const plainText = text.substring(lastIndex);
+                for (let char of plainText) {
+                    currentSegments.push({ type: 'plain', value: char });
+                }
+            }
+
+            // タイピングのインターバル処理
             typingInterval = setInterval(() => {
-                const char = fullText[textIndex];
-                dialogText.innerHTML += char === "\n" ? "<br>" : char;
+                if (textIndex >= currentSegments.length) {
+                    finishTyping();
+                    return;
+                }
+
+                const currentSegment = currentSegments[textIndex];
+
+                if (currentSegment.type === 'plain') {
+                    dialogText.innerHTML += currentSegment.value === "\n" ? "<br>" : currentSegment.value;
+                } else if (currentSegment.type === 'style') {
+                    const formattedValue = currentSegment.value.replace(/\n/g, "<br>");
+                    dialogText.innerHTML += `<span style="${currentSegment.style}">${formattedValue}</span>`;
+                }
+
                 textIndex++;
 
-                if (textIndex >= fullText.length) {
-                    clearInterval(typingInterval);
-                    typing = false;
-
-                    const current = scenario[currentIndex];
-
-                    if (
-                        current.type === "message1" ||
-                        current.type === "gameOver" ||
-                        current.type === "gameClear" ||
-                        current.type === "cimg"
-                    ) {
-                        nextMark.style.display = "block";
-                    }
-
-                    if (typeof typingFinished === "function") {
-                        typingFinished();
-                        typingFinished = null;
-                    }
-
-                    /*if (current.type === "choice") {
-                        showChoices(current.choices);
-                    }*/
-
-                    if (current.type === "message2") {
-                        setTimeout(() => {
-                            currentIndex++;
-                            saveCurrentProgress();
-                            nextEvent();
-                        }, 250);
-                    }
+                if (textIndex >= currentSegments.length) {
+                    finishTyping();
                 }
             }, textSpeed);
         }
 
+        // 装飾を維持したまま、一瞬で最後まで全表示する関数
+        function skipTyping() {
+            clearInterval(typingInterval);
+
+            let fullHTML = "";
+            for (let segment of currentSegments) {
+                if (segment.type === 'plain') {
+                    fullHTML += segment.value === "\n" ? "<br>" : segment.value;
+                } else if (segment.type === 'style') {
+                    const formattedValue = segment.value.replace(/\n/g, "<br>");
+                    fullHTML += `<span style="${segment.style}">${formattedValue}</span>`;
+                }
+            }
+
+            dialogText.innerHTML = fullHTML;
+            textIndex = currentSegments.length;
+
+            finishTyping();
+
+            // スキップ後、次のEnterを受け付けるまでのウェイト
+            setTimeout(() => {
+                justSkipped = false;
+            }, 200);
+        }
+
+        // タイピング終了時の共通ステータス処理
+        function finishTyping() {
+            clearInterval(typingInterval);
+            if (message2Timeout) {
+                clearTimeout(message2Timeout);
+            }
+            typing = false;
+
+            const current = scenario[currentIndex];
+
+            if (
+                current.type === "message1" ||
+                current.type === "gameOver" ||
+                current.type === "gameClear" ||
+                current.type === "cimg"
+            ) {
+                nextMark.style.display = "block";
+            }
+
+            if (typeof typingFinished === "function") {
+                typingFinished();
+                typingFinished = null;
+            }
+
+            if (current.type === "message2") {
+                message2Timeout = setTimeout(() => {
+                    currentIndex++;
+                    saveCurrentProgress();
+                    nextEvent();
+                }, 250);
+            }
+        }
+
+        // 進行管理をおこなうEnterキー・クリック時の統合処理
+        function handleEnter() {
+            if (justSkipped) {
+                return;
+            }
+
+            if (typing) {
+                // スキップ処理中の連打を即座にブロックするため、呼ぶ直前にフラグを立てる
+                justSkipped = true;
+                skipTyping();
+                return;
+            }
+
+            const current = scenario[currentIndex];
+            if (current.type === "gameOver") {
+                nextMark.style.display = "none";
+                showGameOver();
+                return;
+            }
+            if (current.type === "gameClear") {
+                nextMark.style.display = "none";
+                showGameClear();
+                return;
+            }
+            if (current.type === "message1" || current.type === "cimg") {
+                nextMark.style.display = "none";
+                currentIndex++;
+                saveCurrentProgress();
+                nextEvent();
+                return;
+            }
+            if (current.type === "choice") {
+                const selected = current.choices[selectedIndex];
+                if (selected.jump === "htmlTitle" || selected.jump === "title") {
+                    showHtmlTitle();
+                    return;
+                }
+                if (typeof selected.jump === "number") {
+                    currentIndex = selected.jump;
+                } else {
+                    const jumpIndex = findLabel(selected.jump);
+                    if (jumpIndex === -1) {
+                        console.error("Jump label missing:", selected.jump);
+                        return;
+                    }
+                    currentIndex = jumpIndex;
+                }
+                selectedIndex = 0;
+                saveCurrentProgress();
+                nextEvent();
+            }
+        }
 
         function renderChoices(choices) {
             choicesContainer.innerHTML = "";
