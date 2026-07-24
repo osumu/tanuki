@@ -394,7 +394,7 @@
     </div>
 
     <div class="screen" id="gameScreen">
-        <button class="save-trigger-btn" onclick="manualSaveProgress()">セーブ</button>
+        <button class="save-trigger-btn" style="display: none;" onclick="manualSaveProgress()">セーブ</button>
         <div id="save-toast">進捗を保存しました！</div>
         <div class="image-container">
             <img id="gameImage" src="test.png" alt="game image">
@@ -422,7 +422,7 @@
         let goBaseWidth = 431;
         let goBaseHeight = 600;
 
-        let saveProgressEnabled = false;
+        let saveProgressEnabled = true;
 
         const nameBox = document.getElementById("nameBox");
         const dialogText = document.getElementById("dialogText");
@@ -437,9 +437,17 @@
             }
             return index;
         }
+
+        function saveButtonNone() {
+            const saveBtn = document.querySelector(".save-trigger-btn");
+            if (saveBtn) {
+                saveBtn.style.display = saveProgressEnabled ? "block" : "none";
+            }
+        }
+
         function manualSaveProgress() {
             if (!saveProgressEnabled) {
-                document.getElementsByClassName("save-trigger-btn").style.display = "none";
+                saveButtonNone();
                 return;
             }
             localStorage.setItem("tanuki_game_progress", currentIndex);
@@ -536,16 +544,12 @@
                 } else {
                     btnOff.classList.add("active");
                     localStorage.setItem("tanuki_save_enabled", "false");
-                    localStorage.removeItem("tanuki_game_progress"); // OFF時は進捗を即時削除
+                    localStorage.removeItem("tanuki_game_progress"); 
                 }
             }
+            saveButtonNone();
         }
-
-        // ==========================================
-        // 3. 設定と進捗の読み込み（起動時＆設定画面を開いたときに実行）
-        // ==========================================
         function loadSettingsAndProgress() {
-            // --- ① 進捗保存設定の読み込み ---
             const btnOn = document.getElementById("save-on");
             const btnOff = document.getElementById("save-off");
 
@@ -591,6 +595,7 @@
                     speedNormal.classList.add("active");
                 }
             }
+            saveButtonNone();
         }
 
         function saveCurrentProgress() {
@@ -987,66 +992,6 @@
                 saveCurrentProgress();
             }
             nextEvent();
-        }
-
-        function handleEnter() {
-            if (typing) {
-                clearInterval(typingInterval);
-                dialogText.innerHTML = fullText.replace(/\n/g, "<br>");
-                typing = false;
-                const current = scenario[currentIndex];
-                if (current.type === "message1" || current.type === "gameOver" || current.type === "gameClear" || current.type === "cimg") {
-                    nextMark.style.display = "block";
-                }
-                if (current.type === "message2") {
-                    setTimeout(() => {
-                        currentIndex++;
-                        saveCurrentProgress();
-                        nextEvent();
-                    }, 200);
-                }
-                return;
-            }
-
-            const current = scenario[currentIndex];
-            if (current.type === "gameOver") {
-                nextMark.style.display = "none";
-                showGameOver();
-                return;
-            }
-            if (current.type === "gameClear") {
-                nextMark.style.display = "none";
-                showGameClear();
-                return;
-            }
-            if (current.type === "message1" || current.type === "cimg") {
-                nextMark.style.display = "none";
-                dialogText.innerHTML = fullText.replace(/\n/g, "<br>");
-                currentIndex++;
-                saveCurrentProgress();
-                nextEvent();
-                return;
-            }
-            if (current.type === "choice") {
-                const selected = current.choices[selectedIndex];
-                if (selected.jump === "htmlTitle" || selected.jump === "title") {
-                    showHtmlTitle();
-                    return;
-                }
-                if (typeof selected.jump === "number") {
-                    currentIndex = selected.jump;
-                } else {
-                    const jumpIndex = findLabel(selected.jump);
-                    if (jumpIndex === -1) {
-                        console.error("Jump label missing:", selected.jump);
-                        return;
-                    }
-                    currentIndex = jumpIndex;
-                }
-                selectedIndex = 0;
-                saveCurrentProgress();
-                nextEvent();
-            }
         }
 
         document.addEventListener("keydown", e => {
