@@ -151,7 +151,7 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "？？？", text: "「でもあなたには期待するわ。不正解だったらもちろんバツがあるけどね♡」" },
         { type: "message1", image: "test.png", name: "たぬき", text: "（？？っていうことはぼくは今記憶喪失？だからこのババア...あ、訂正。この人のことはわからないのか！）" },
         { type: "message1", image: "test.png", name: "たぬき", text: "（じゃあクイズに挑戦すればいいんだな！）" },
-        { type: "gameClear", image: "test.png", name: "？？？", text: "「あ、いっとくけど私相手の心がわかるからね♡　だから今君が...ババアって私のことを言ったのもわかるからね♡」" },
+        { type: "message1", image: "test.png", name: "？？？", text: "「あ、いっとくけど私相手の心がわかるからね♡　だから今君が...ババアって私のことを言ったのもわかるからね♡」" },
         { type: "message1", image: "test.png", name: "たぬき", text: "（えええー？？？や、やばっ！？）" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「ま、そういうことでいざクイズへgo！」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「手下A, B準備よろしく！！」" },
