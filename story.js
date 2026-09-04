@@ -1,3 +1,18 @@
+const storyVoice = (() => {
+    const c = {};
+    return {
+        play: s => {
+            if (!s) return;
+            let a = c[s] || (c[s] = new Audio(s));
+            a.pause();
+            a.currentTime = 0;
+            a.play().catch(e => console.warn("音声を再生できません:", s, e));
+        }
+    }
+})();
+
+
+
 function getScenario() {
     return [
         { label: "prologue" },
@@ -108,7 +123,7 @@ function getScenario() {
         { type: "choice", image: "test.png", name: "たぬき", text: "（ん－なんだっけなー...）", choices: [{ text: "タヌコ", jump: "tanuko" }, { text: "タヌミ", jump: "tanumi" }] },
         { label: "tanuko" },
         { type: "message1", image: "test.png", name: "たぬき", text: "よし！タヌコにした！\nタヌコっと...机が高い..." },
-        { type: "message1", image: "test.png", name: "？？", text: "ピンポーン" },
+        { type: "message1", image: "test.png", name: "？？", text: "[style='color:#e7e706']「ピンポーン」]" },
         { type: "message1", image: "test.png", name: "アナウンス", text: "＜＜正解おめでとうございます＞＞" },
         { type: "message1", image: "test.png", name: "たぬき", text: "ええっ！？書いただけで？すげえ～！" },
         { type: "message1", image: "test.png", name: "アナウンス", text: "＜＜たぬきには、次の試練に進む資格が与えられます＞＞" },
@@ -151,7 +166,7 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "？？？", text: "「でもあなたには期待するわ。不正解だったらもちろんバツがあるけどね♡」" },
         { type: "message1", image: "test.png", name: "たぬき", text: "（？？っていうことはぼくは今記憶喪失？だからこのババア...あ、訂正。この人のことはわからないのか！）" },
         { type: "message1", image: "test.png", name: "たぬき", text: "（じゃあクイズに挑戦すればいいんだな！）" },
-        { type: "gameClear", image: "test.png", name: "？？？", text: "「あ、いっとくけど私相手の心がわかるからね♡　だから今君が...ババアって私のことを言ったのもわかるからね♡」" },
+        { type: "message1", image: "test.png", name: "？？？", text: "「あ、いっとくけど私相手の心がわかるからね♡　だから今君が...ババアって私のことを言ったのもわかるからね♡」" },
         { type: "message1", image: "test.png", name: "たぬき", text: "（えええー？？？や、やばっ！？）" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「ま、そういうことでいざクイズへgo！」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「手下A, B準備よろしく！！」" },
@@ -217,7 +232,7 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "モニターの声", text: "＜＜残り、5秒, 4, 3, 2, 1＞＞" },
         { type: "message1", image: "test.png", name: "モニターの声", text: "＜＜クイズ第二問終了します。答え合わせをします＞＞" },
         { type: "message1", image: "test.png", name: "モニターの声", text: "「答え合わせ中...」" },
-        { type: "message1", image: "test.png", name: "モニターの声", text: "「[style='color:#7d7d05;']ピンポンピンポンピンポーン]」" },
+        { type: "message1", image: "test.png", name: "モニターの声", text: "「[style='color:#e7e706;']ピンポンピンポンピンポーン]」" },
         { type: "message1", image: "test.png", name: "たぬき", text: "「イエーイやったやった！　正解だぁ！」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「おめでとうございます。ココマデこれたのはあなたが初めてだわ！」「もう初老か...トホホ...」" },
         { type: "message1", image: "test.png", name: "たぬき", text: "「まっまじ！とそこじゃなくて、今妙にココマデのところがカタコトになっていたような...。というかこのババア...あ　この方の歳は50歳なのか...」" },
@@ -289,10 +304,101 @@ function getScenario() {
         { type: "choice", image: "test.png", name: "たぬき", text: "わーーー...", choices: [{ text: "さっきの人は誰？", jump: "overjibakurei" }] },
         { label: "jyouhin" },
         { type: "message1", image: "test.png", name: "たぬき", text: "（よし、この紙に上品マダムっと）" },
-        { type: "gameClear", image: "test.png", name: "そのころ上品マダムは...↓", text: "「あのたぬきけっこうまともなところもあるのねぇー 下品マダム」" },
+        { type: "message1", image: "test.png", name: "そのころ上品マダムは...↓", text: "「あのたぬきけっこうまともなところもあるのねぇー。下品マダムと選択したらとんでもないことになってたわ。おほほほほ」" },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "「はい、ご記入終わりましたようなので答え合わせをいたします...........今終わりました。お二人とも正解です！」" },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "「次の問題まで時間があるので商品のことを説明いたします。上品マダムこと奥様は、難しい試練だけに、商品を与えられております。\nそして、今回の試練はけっこう難しいとおっしゃり、商品に不老不死の魔法をかけました。」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（え、アンドロイドって不老不死の魔法いらなくね？）" },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "「たぬき様の考えていること分かりました。アンドロイドにとって不老不死の魔法はずっと壊れないという魔法になります。ここで次の問題の時間です！」" },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "「第4問（最終問題）！！」デレーン\n「上品マダムがしゃべった時に、妙にカタコトになった時の言葉は？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（ん？ボタンが押せない...。？）" },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "今回は、二人ですので二人とも回答してもらいます！（たぬき（あっそっか））では解答よろしくお願いします。" },
+        { type: "choice", image: "test.png", name: "たぬき", text: "えっとあのなんかお酒飲むときのやつか...。ココマデとかココカラみたいなこと言ったやつか？難しすぎる！とりあえず考える！", choices: [{ text: "ココマデ", jump: "kokomade" }, { text: "ココカラ", jump: "overkokokara" }] },
+        { label: "gehin" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（よし、この紙に下品マダムっと）" },
+        { type: "message1", image: "test.png", name: "そのころ上品マダムは...↓", text: "「あのたぬき、よくもこのわたくしのことを下品と呼べたわねぇ　ゴゴゴゴゴ💢💢💢(ꐦ◣д◢)」" },
+        { type: "message1", image: "test.png", name: "アナウンス0006", text: "「はい、ご記入終わりましたようなので答え合わせをいたします...........はいっ　今終わりました。この時点で結果が決まりました。商品をもらえるのは、アンドロイド0006様でございます！」" },
+        { type: "message1", image: "test.png", name: "アンドロイド", text: "「ヒャッホー！ショウヒンハオレガモラウッハハハ」（たぬき（えー？うっうそでしょ？！））" },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "「最後ですが、商品の説明をいたします。今回、タヌコ様こと上品マダム様（奥様？）は商品を難しい試練だけに出しております。で、この試練は結構難しいとおっしゃり.......不老不死の魔法を商品にかけました。」" },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "ではたぬき様さようなら。" },
+        { type: "message1", image: "test.png", name: "？？", text: "ヒューン ドン" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "なっなんだ上のほうにポツンとあかりが！あんなとこから落ちてきたんだ..." },
+        { type: "message1", image: "test.png", name: "？？？", text: "そこのお前早くドアに入れ！" },
+        { type: "message1", image: "test.png", name: "？？", text: "ドン" },
+        { type: "choice", image: "test.png", name: "たぬき", text: "わーーー...", choices: [{ text: "さっきの人は誰？", jump: "overjibakurei" }] },
+        { label: "kokomade" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "よし　たぶんココマデだ！解答用紙にココマデっと..." },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "「お二人様解答終わりましたようなので、答え合わせをいたします！..........はい、結果が出ました。商品をもらえるのは...」" },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "「たぬき様です！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（え？ぼぼぼく？？やったー！！）" },
+        { type: "message1", image: "test.png", name: "アンドロイド0006", text: "チッ　オレラニハワカラネーモンダイダ！ゲヒンマダム？ダッタッケナ？マァソンナヤツトハナシテルコトナンテワカリャシネェ" },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "「アンドロイド0006様は排除されます。アンドロイド0006「ジャアナ」ではたぬき様の商品３つあるんですが何個お持ちしますか？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（えっと１つでもいいんだけど...そうだ！！ひよこと猫にもあげよう！）「えっと、３つください！」" },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "「はいどうぞ　では次の試練に進みますので、そこのマダムのとびらに入ってください！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "えっとこのババア？あっ訂正　の扉に入って..." },
+        { type: "message1", image: "white.png", name: "解説の仕事って地味だよねとか言ってる解説", text: "A few seconds later" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「おめでとうございます！ココマデとココカラ迷っていたわね！運でやったのかしら？ほほほ　また飲みます？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（えっと、ぼく男だけど、ええって答えたほうがいいのかな？まぁいっか）「はい！」" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "[style='font-size: 0.7em;']「今気づいたのだけど、このたぬき私と違って結構下品ね...。」]" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（まあ丸聞こえですけど...）" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「あらっ」「準備ができたみたいね！」" },
+        { type: "message1", image: "test.png", name: "上品マダムと手下A, B", text: "[style='font-size: 0.5em;']「入れたかしら例の薬」「はい」]" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（んん？なんか今上品マダムと手下たちの声が聞こえたような...）" },
+        { type: "message1", image: "test.png", name: "上品マダムと一同", text: "「さあどうぞ」「カンパーイ」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "ゴクゴクゴクン（みんなの視線がやばい...意識が遠のいていく...）バタッ" },
+        { type: "message1", image: "black.png", name: "上品マダム", text: "「よし！いいわよ　例の場所に連れてって♡」" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「よしスタンバイOKだわ！では！始めましょう！」" },
+        { type: "message1", image: "test.png", name: "？？", text: "ガッシャン！", sounds: { 0: "sara.mp3" } },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（ん？なんだこの音...むにゃむにゃ）\n（うるさいなぁ　寝てるのに...むにゃむにゃすやすや）" },
+        { type: "message1", image: "test.png", name: "？？", text: "ガッシャン！", sounds: { 0: "sara.mp3" } },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（もう！起きようかな？でもまだ寝たいし...起きるか...起きないか...）" },
+        { type: "choice", image: "test.png", name: "またまた登場解説", text: "さあ、君はどっちにする？", choices: [{ text: "起きる", jump: "okiru" }, { text: "起きない", jump: "okinai" }] },
+        { label: "okiru" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "よし！起きるぞ！んん.....ガバッ" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「ハーイ！おはよう！第３試練クリアよ！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「え？んんんん？どゆこと？」" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「まあそう思うのも普通だわ。第３試練はぬきうちだもの！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（え？）" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「第３試練は、さっきのワインで眠らせて、お皿が割れる音で起きれるか？よ！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「あー！💡」\n「では、すべての試練をクリアしたということですか？」" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「うん！まぁそういうことになるわね！でも、ここで話すのもあれだし、そこのマダムの扉とびらをくぐったところで話しましょ！！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（そうだよね...ここ寝室だし...）\n（よし！じゃあこの、ババアのとびら？だっけ？まあそこの扉に入ってと）" },
+        { type: "message1", image: "test.png", name: "そのころ上品マダムは↓", text: "「あのたぬき、またわたくしのことをババアっておっしゃった！！ぷるぷる💢💢💢」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（ん？なんか体がもぞもぞする...。）" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「よしっ来たようね！\nでは、最後にさっきの話をしたいんだけど...そのまえに[style='font-weight: bold;']説教タイムを取りましょうか！？]」ゴゴゴゴゴゴゴ（圧）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "え？なんで！？ぼくなんにもしてないよぉ！" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「ん？してなくないわよねぇ？💢」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（このババア怒ると怖すぎる）" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「またババアって言った...。これまで、何回ババアって言ったと思う？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（えーっと　３回）" },
+        { type: "gameClear", image: "test.png", name: "上品マダム", text: "カチン💢[style='font-size:40px;font-weight:bold;background:linear-gradient(90deg,red,orange,yellow,green,cyan,blue,purple);background-size:400% 400%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rainbow 6s linear infinite;']「ハァァァ？なめてんのかごらぁぁぁ！！」]" },
 
 
-        //上まだ
+        { label: "okinai" },
+        { type: "message1", image: "test.png", name: "？？", text: "ガッシャン！", sounds: { 0: "sara.mp3" } },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（んんん　もう！うるさいなぁ！起きて雷落としてやる！！）ガバッ" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "[style='font-size: 40px']「うるさーーーーーーーーーーい！！」]" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「あら遅いわねぇ起きるの。そろそろ君も終わりだわね！第３試練（ぬきうち）失格よ！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「？？？」" },
+        { type: "message1", image: "test.png", name: "？？", text: "ヒューン ドン" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "なっなんだ上のほうにポツンとあかりが！あんなとこから落ちてきたんだ..." },
+        { type: "message1", image: "test.png", name: "？？？", text: "そこのお前早くドアに入れ！" },
+        { type: "message1", image: "test.png", name: "？？", text: "ドン" },
+        { type: "choice", image: "test.png", name: "たぬき", text: "わーーー...", choices: [{ text: "さっきの人は誰？", jump: "overjibakurei" }] },
+
+
+        // 上まだ
+        { label: "overkokokara" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "えっと　たぶんココカラだ！解答用紙にココカラっと..." },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "「お二人　解答が終わりましたようなので、答え合わせをします。..........はい、結果が出ました。商品をもらえるのは...」" },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "「アンドロイド0006様です！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（え？）" },
+        { type: "message1", image: "test.png", name: "アンドロイド0006", text: "「ハハハハハ　ヤッパコノオレガ　ショウヒンヲモラウコトハキマッテイタノダーー！！」" },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "「ではたぬき様　さようなら！」" },
+        { type: "message1", image: "test.png", name: "？？", text: "ヒューン ドン" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "なっなんだ上のほうにポツンとあかりが！あんなとこから落ちてきたんだ..." },
+        { type: "message1", image: "test.png", name: "？？？", text: "そこのお前早くドアに入れ！" },
+        { type: "message1", image: "test.png", name: "？？", text: "ドン" },
+        { type: "choice", image: "test.png", name: "たぬき", text: "わーーー...", choices: [{ text: "さっきの人は誰？", jump: "overjibakurei" }] },
         { label: "curse" },
         { type: "message1", image: "test.png", name: "解説", text: "呪うを選択した！\n目の前にドアが現れた！？" },
         { type: "message1", image: "test.png", name: "たぬき", text: "行き先は...　[style='text-decoration:underline;']じごく！？]" },
@@ -395,7 +501,7 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "たぬき", text: "やべっ\n位置について..." },
         { type: "message1", image: "test.png", name: "アナウンス", text: "＜＜3, 2, 1... シンサカイシ＞＞" },
         { type: "message1", image: "test.png", name: "たぬき", text: "うおー！！干して干して干して干しまくるー！！！" },
-        { type: "message1", image: "test.png", name: "久々の解説", text: "（6時間がたち...）" },
+        { type: "message1", image: "test.png", name: "久々の解説", text: "（Six hours later...）" },
         { type: "message1", image: "test.png", name: "アナウンス", text: "＜＜シュウリョウ2ジカンマエ... 1ジカン59フン...＞＞" },
         { type: "message1", image: "test.png", name: "たぬき", text: "まだまだじゃねえか！！うおおおおおおおおお！！" },
         { type: "message1", image: "test.png", name: "たぬき", text: "おぉぉーーーーーー！！おぉーーーーーー！！　干して、干して、干しまくる！" },
@@ -468,4 +574,23 @@ function getScenario() {
         { type: "gameClear", image: "test.png", name: "開発者", text: "ここまでしかつくってないよーん" },
     ];
 };
+
+(function () {
+    let l = "", i = -1;
+    setInterval(() => {
+        const d = document.getElementById("dialogText");
+        if (!d || typeof scenario == "undefined" || typeof currentIndex == "undefined") return;
+        try {
+            const e = scenario[currentIndex];
+            if (!e) return;
+            if (currentIndex !== i) { i = currentIndex; l = ""; }
+            const t = d.textContent || "";
+            if (t.length < l.length) { l = t; return; }
+            if (t === l) return;
+            const s = e.sounds || {};
+            for (let x = l.length; x < t.length; x++) if (s.hasOwnProperty(x)) storyVoice.play(s[x]);
+            l = t;
+        } catch (err) { console.warn("音声処理エラー:", err); }
+    }, 5);
+})();
 

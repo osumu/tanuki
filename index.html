@@ -11,6 +11,20 @@
             src: url('PixelMplus12-Regular.ttf') format('truetype');
         }
 
+        @keyframes gradFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
         * {
             box-sizing: border-box;
         }
@@ -544,7 +558,7 @@
                 } else {
                     btnOff.classList.add("active");
                     localStorage.setItem("tanuki_save_enabled", "false");
-                    localStorage.removeItem("tanuki_game_progress"); 
+                    localStorage.removeItem("tanuki_game_progress");
                 }
             }
             saveButtonNone();
