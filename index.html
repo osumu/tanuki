@@ -258,6 +258,10 @@
             animation: blink 1s infinite;
         }
 
+        .nextmark {
+            animation: blink 1s infinite;
+        }
+
         @keyframes blink {
 
             0%,
@@ -390,6 +394,8 @@
             padding: 2px 10px;
             font-size: clamp(14px, 2vw, 20px);
             margin-bottom: 8px;
+            align-self: flex-start;
+            width: fit-content;
         }
 
         .dialog-text {
@@ -523,7 +529,9 @@
     <div class="screen" id="battleScreen">
         <div class="battle-container">
             <div class="battle-dialog-box">
+                <div class="name-box" id="battleNameBox"></div>
                 <div class="battle-dialog-text" id="battleDialogText"></div>
+                <div id="battleNextMark" class="next-mark">▼</div>
             </div>
             <div class="battle-image-container">
                 <img id="battleImage" src="" alt="Battle Image">
@@ -553,7 +561,7 @@
             <div class="name-box" id="nameBox"></div>
             <div class="dialog-text" id="dialogText"></div>
             <div class="choices" id="choices"></div>
-            <div id="nextMark">▼</div>
+            <div id="nextMark" class="nextmark">▼</div>
         </div>
     </div>
 
@@ -583,6 +591,7 @@
         const gameImage = document.getElementById("gameImage");
         const battleScreen = document.getElementById("battleScreen");
         const battleImage = document.getElementById("battleImage");
+        const battleNameBox = document.getElementById("battleNameBox");
         const battleDialogText = document.getElementById("battleDialogText");
         const battleChoicesContainer = document.getElementById("battleChoices");
         const battleItemList = document.getElementById("battleItemList");
@@ -608,6 +617,18 @@
             }
 
             return !!flags[condition];
+        }
+
+        function updateNameBox(name) {
+            if (!nameBox) return;
+
+            if (name && name.trim() !== "") {
+                nameBox.textContent = name;
+                nameBox.style.display = "inline-block";
+            } else {
+                nameBox.textContent = "";
+                nameBox.style.display = "none";
+            }
         }
 
         function saveButtonNone() {
@@ -1036,17 +1057,21 @@
                 showGameClear();
                 return;
             }
-            if (current.type === "message1" || current.type === "cimg") {
-                nextMark.style.display = "none";
+
+            if (
+                current.type === "message1" ||
+                current.type === "cimg" ||
+                (current.type === "battle" && (!current.choices || current.choices.length === 0))
+            ) {
+                if (nextMark) nextMark.style.display = "none";
+                if (battleNextMark) battleNextMark.style.display = "none";
                 currentIndex++;
                 saveCurrentProgress();
                 nextEvent();
                 return;
             }
 
-            if (current.type === "choice" || current.type === "battle") {
-                if (!current.choices || current.choices.length === 0) return;
-
+            if (current.type === "choice" || (current.type === "battle" && current.choices && current.choices.length > 0)) {
                 const selected = current.choices[selectedIndex];
                 if (!selected) return;
 
@@ -1096,6 +1121,16 @@
                     hideAllScreens();
                     battleScreen.style.display = "flex";
 
+                    if (battleNameBox) {
+                        if (current.name && current.name.trim() !== "") {
+                            battleNameBox.textContent = current.name;
+                            battleNameBox.style.display = "block";
+                        } else {
+                            battleNameBox.textContent = "";
+                            battleNameBox.style.display = "none";
+                        }
+                    }
+
                     if (current.image) battleImage.src = current.image;
 
                     battleItemList.innerHTML = "";
@@ -1111,8 +1146,10 @@
 
                     typeText(current.text || "", battleDialogText, battleNextMark);
                     typingFinished = () => {
-                        if (current.choices) {
+                        if (current.choices && current.choices.length > 0) {
                             renderChoices(current.choices, battleChoicesContainer);
+                        } else {
+                            battleChoicesContainer.innerHTML = "";
                         }
                     };
                     return;
@@ -1135,19 +1172,21 @@
                     showHtmlTitle();
                     return;
                 }
+
                 if (current.type === "message1" || current.type === "message2" || current.type === "gameOver" || current.type === "gameClear" || current.type === "cimg") {
-                    nameBox.textContent = current.name || "";
+                    updateNameBox(current.name);
                     choicesContainer.innerHTML = "";
                     typeText(current.text || "");
                     return;
                 }
+
                 if (current.type === "choice") {
-                    nameBox.textContent = current.name || "";
+                    updateNameBox(current.name);
                     nextMark.style.display = "none";
                     typeText(current.text || "");
                     typingFinished = () => {
                         renderChoices(current.choices);
-                    }
+                    };
                     return;
                 }
 
