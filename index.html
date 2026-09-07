@@ -11,19 +11,6 @@
             src: url('PixelMplus12-Regular.ttf') format('truetype');
         }
 
-        @keyframes gradFlow {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
 
         * {
             box-sizing: border-box;
@@ -37,6 +24,20 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
+        }
+
+        @keyframes rainbow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .screen {
@@ -175,6 +176,100 @@
             text-align: center;
         }
 
+        #battleScreen {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* 全体の外枠のみ指定 */
+        .battle-container {
+            width: 90%;
+            max-width: 600px;
+            height: 90vh;
+            border: 2px solid #000000;
+            padding: 12px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background-color: #ffffff;
+        }
+
+        .battle-dialog-box {
+            height: 70px;
+            position: relative;
+            background: #ffffff;
+        }
+
+
+        .battle-items-box {
+            width: 35%;
+            font-size: 13px;
+            overflow-y: auto;
+        }
+
+        .battle-image-container {
+            border: 2px solid #000000;
+            padding: 12px;
+            box-sizing: border-box;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .battle-image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* 下段：選択 */
+        .battle-choices-box {
+            height: 100px;
+            font-size: 14px;
+            overflow-y: auto;
+        }
+
+        .panel-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        #battleItemList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #battleItemList li {
+            margin-bottom: 2px;
+        }
+
+        .next-mark {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
         .content-box {
             width: 100%;
             max-width: 500px;
@@ -304,6 +399,14 @@
             margin-bottom: 10px;
         }
 
+        .battle-dialog-text {
+            font-size: clamp(16px, 2.5vw, 24px);
+            line-height: 1.5;
+            min-height: 60px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
         .choices {
             display: flex;
             flex-direction: column;
@@ -311,13 +414,27 @@
             font-size: clamp(16px, 2.5vw, 24px);
         }
 
+        .choice {
+            text-align: left;
+            width: 250px;
+        }
+
+
         .choice::before {
-            content: " ";
+            content: "";
             margin-right: 8px;
         }
 
         .choice.selected::before {
             content: "▶";
+        }
+
+        #choices,
+        #battleChoices {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
         }
 
         #nextMark {
@@ -385,6 +502,7 @@
                     <button id="save-on" class="config-btn" onclick="toggleSettings(true)">ON</button>
                     <button id="save-off" class="config-btn active" onclick="toggleSettings(false)">OFF</button>
                 </div>
+                <button onclick="flags = {}">ゲーム進捗のフラグをクリア</button>
             </div>
         </div>
         <button class="back-btn" onclick="showHtmlTitle()">タイトルに戻る</button>
@@ -399,6 +517,24 @@
                 <area id="go-area2" shape="rect" coords="116,219,280,254"
                     onclick="event.preventDefault(); resetGameOverUI(); startPrologue();" alt="Start Game">
             </map>
+        </div>
+    </div>
+
+    <div class="screen" id="battleScreen">
+        <div class="battle-container">
+            <div class="battle-dialog-box">
+                <div class="battle-dialog-text" id="battleDialogText"></div>
+            </div>
+            <div class="battle-image-container">
+                <img id="battleImage" src="" alt="Battle Image">
+            </div>
+            <div class="battle-items-box">
+                <div class="panel-title">アイテム</div>
+                <ul id="battleItemList"></ul>
+            </div>
+            <div class="battle-choices-box">
+                <div class="choices" id="battleChoices"></div>
+            </div>
         </div>
     </div>
 
@@ -438,11 +574,22 @@
 
         let saveProgressEnabled = true;
 
+        let flags = {};
+
         const nameBox = document.getElementById("nameBox");
         const dialogText = document.getElementById("dialogText");
         const choicesContainer = document.getElementById("choices");
         const nextMark = document.getElementById("nextMark");
         const gameImage = document.getElementById("gameImage");
+        const battleScreen = document.getElementById("battleScreen");
+        const battleImage = document.getElementById("battleImage");
+        const battleDialogText = document.getElementById("battleDialogText");
+        const battleChoicesContainer = document.getElementById("battleChoices");
+        const battleItemList = document.getElementById("battleItemList");
+
+        let currentSegments = [];
+        let justSkipped = false;
+        let message2Timeout = null;
 
         function findLabel(labelName) {
             const index = scenario.findIndex(s => s.label === labelName);
@@ -450,6 +597,17 @@
                 console.error("Label not found:", labelName);
             }
             return index;
+        }
+
+        function checkCondition(condition) {
+            if (!condition) return true;
+
+            if (condition.startsWith("!")) {
+                const flagName = condition.slice(1);
+                return !flags[flagName];
+            }
+
+            return !!flags[condition];
         }
 
         function saveButtonNone() {
@@ -521,22 +679,19 @@
                 if (speed === 'fast') {
                     textSpeed = 10;
                     speedFast.classList.add("active");
-                    localStorage.setItem("tanuki_text_speed", "10"); // ローカルストレージに保存
+                    localStorage.setItem("tanuki_text_speed", "10");
                 } else if (speed === 'slow') {
                     textSpeed = 60;
                     speedSlow.classList.add("active");
-                    localStorage.setItem("tanuki_text_speed", "60"); // ローカルストレージに保存
+                    localStorage.setItem("tanuki_text_speed", "60");
                 } else {
                     textSpeed = 30;
                     speedNormal.classList.add("active");
-                    localStorage.setItem("tanuki_text_speed", "30"); // ローカルストレージに保存
+                    localStorage.setItem("tanuki_text_speed", "30");
                 }
             }
         }
 
-        // ==========================================
-        // 2. 進捗保存ON/OFFの切り替え
-        // ==========================================
         function toggleSettings(enabled) {
             saveProgressEnabled = enabled;
 
@@ -563,6 +718,7 @@
             }
             saveButtonNone();
         }
+
         function loadSettingsAndProgress() {
             const btnOn = document.getElementById("save-on");
             const btnOff = document.getElementById("save-off");
@@ -578,11 +734,10 @@
                 } else {
                     saveProgressEnabled = false;
                     btnOff.classList.add("active");
-                    localStorage.setItem("tanuki_save_enabled", "false"); // デフォルトはOFF
+                    localStorage.setItem("tanuki_save_enabled", "false");
                 }
             }
 
-            // --- ② 文字送り速度の読み込み ---
             const speedFast = document.getElementById("speed-fast");
             const speedNormal = document.getElementById("speed-normal");
             const speedSlow = document.getElementById("speed-slow");
@@ -592,15 +747,13 @@
                 speedNormal.classList.remove("active");
                 speedSlow.classList.remove("active");
 
-                // localStorageから保存された速度を取得
                 const savedSpeed = localStorage.getItem("tanuki_text_speed");
                 if (savedSpeed !== null) {
                     textSpeed = parseInt(savedSpeed, 10);
                 } else {
-                    textSpeed = 30; // 保存データがない場合はデフォルト30（普通）
+                    textSpeed = 30;
                 }
 
-                // 取得した速度に応じてボタンを点灯
                 if (textSpeed === 10) {
                     speedFast.classList.add("active");
                 } else if (textSpeed === 60) {
@@ -626,6 +779,7 @@
             if (document.getElementById("gameClearScreen")) document.getElementById("gameClearScreen").style.display = "none";
             if (document.getElementById("HowToPlayScreen")) document.getElementById("HowToPlayScreen").style.display = "none";
             if (document.getElementById("SettingsScreen")) document.getElementById("SettingsScreen").style.display = "none";
+            if (battleScreen) battleScreen.style.display = "none";
         }
 
         function calculateMapCoords(imgId, baseWidth, baseHeight, coordsData) {
@@ -720,24 +874,16 @@
             nextMark.style.display = "none";
         }
 
-        // タイピング中の全セグメントを保持する変数
-        let currentSegments = [];
-        // スキップした直後の誤作動を防ぐためのフラグ
-        let justSkipped = false;
-        let message2Timeout = null;
-
-        function typeText(text) {
+        function typeText(text, targetDialog = dialogText, targetNext = nextMark) {
             clearInterval(typingInterval);
             typing = true;
             justSkipped = false;
             fullText = text;
             textIndex = 0;
-            dialogText.innerHTML = "";
-            nextMark.style.display = "none";
+            targetDialog.innerHTML = "";
+            if (targetNext) targetNext.style.display = "none";
 
             currentSegments = [];
-
-            // タグ全体を確実に1つずつ切り出す安全な正規表現
             const regex = /\[style=['"]([^'"]*?)['"]\]([^\]]*?)\]/g;
 
             let lastIndex = 0;
@@ -750,13 +896,11 @@
                         currentSegments.push({ type: 'plain', value: char });
                     }
                 }
-
                 currentSegments.push({
                     type: 'style',
                     style: match[1],
                     value: match[2]
                 });
-
                 lastIndex = regex.lastIndex;
             }
 
@@ -767,31 +911,85 @@
                 }
             }
 
-            // タイピングのインターバル処理
             typingInterval = setInterval(() => {
                 if (textIndex >= currentSegments.length) {
-                    finishTyping();
+                    finishTyping(targetNext);
                     return;
                 }
 
                 const currentSegment = currentSegments[textIndex];
 
                 if (currentSegment.type === 'plain') {
-                    dialogText.innerHTML += currentSegment.value === "\n" ? "<br>" : currentSegment.value;
+                    targetDialog.innerHTML += currentSegment.value === "\n" ? "<br>" : currentSegment.value;
                 } else if (currentSegment.type === 'style') {
                     const formattedValue = currentSegment.value.replace(/\n/g, "<br>");
-                    dialogText.innerHTML += `<span style="${currentSegment.style}">${formattedValue}</span>`;
+                    targetDialog.innerHTML += `<span style="${currentSegment.style}">${formattedValue}</span>`;
                 }
 
                 textIndex++;
 
                 if (textIndex >= currentSegments.length) {
-                    finishTyping();
+                    finishTyping(targetNext);
                 }
             }, textSpeed);
         }
 
-        // 装飾を維持したまま、一瞬で最後まで全表示する関数
+        function finishTyping(targetNext = nextMark) {
+            clearInterval(typingInterval);
+            if (message2Timeout) {
+                clearTimeout(message2Timeout);
+            }
+            typing = false;
+
+            const current = scenario[currentIndex];
+
+            if (
+                current.type === "message1" ||
+                current.type === "gameOver" ||
+                current.type === "gameClear" ||
+                current.type === "cimg" ||
+                current.type === "battle"
+            ) {
+                if (targetNext) targetNext.style.display = "block";
+            }
+
+            if (typeof typingFinished === "function") {
+                typingFinished();
+                typingFinished = null;
+            }
+
+            if (current.type === "message2") {
+                message2Timeout = setTimeout(() => {
+                    currentIndex++;
+                    saveCurrentProgress();
+                    nextEvent();
+                }, 250);
+            }
+        }
+
+        function renderChoices(choices, container = choicesContainer) {
+            container.innerHTML = "";
+            choices.forEach((choice, index) => {
+                const div = document.createElement("div");
+                div.className = "choice";
+                div.style.cursor = "pointer";
+                if (index === selectedIndex) {
+                    div.classList.add("selected");
+                    div.textContent = "　" + choice.text;
+                } else {
+                    div.textContent = "　　" + choice.text;
+                }
+                div.addEventListener("click", () => {
+                    selectedIndex = index;
+                    renderChoices(choices, container);
+                    setTimeout(() => {
+                        handleEnter();
+                    }, 100);
+                });
+                container.appendChild(div);
+            });
+        }
+
         function skipTyping() {
             clearInterval(typingInterval);
 
@@ -809,60 +1007,25 @@
             textIndex = currentSegments.length;
 
             finishTyping();
-
-            // スキップ後、次のEnterを受け付けるまでのウェイト
             setTimeout(() => {
                 justSkipped = false;
             }, 200);
         }
 
-        // タイピング終了時の共通ステータス処理
-        function finishTyping() {
-            clearInterval(typingInterval);
-            if (message2Timeout) {
-                clearTimeout(message2Timeout);
-            }
-            typing = false;
-
-            const current = scenario[currentIndex];
-
-            if (
-                current.type === "message1" ||
-                current.type === "gameOver" ||
-                current.type === "gameClear" ||
-                current.type === "cimg"
-            ) {
-                nextMark.style.display = "block";
-            }
-
-            if (typeof typingFinished === "function") {
-                typingFinished();
-                typingFinished = null;
-            }
-
-            if (current.type === "message2") {
-                message2Timeout = setTimeout(() => {
-                    currentIndex++;
-                    saveCurrentProgress();
-                    nextEvent();
-                }, 250);
-            }
-        }
-
-        // 進行管理をおこなうEnterキー・クリック時の統合処理
         function handleEnter() {
             if (justSkipped) {
                 return;
             }
 
             if (typing) {
-                // スキップ処理中の連打を即座にブロックするため、呼ぶ直前にフラグを立てる
                 justSkipped = true;
                 skipTyping();
                 return;
             }
 
             const current = scenario[currentIndex];
+            if (!current) return;
+
             if (current.type === "gameOver") {
                 nextMark.style.display = "none";
                 showGameOver();
@@ -880,8 +1043,13 @@
                 nextEvent();
                 return;
             }
-            if (current.type === "choice") {
+
+            if (current.type === "choice" || current.type === "battle") {
+                if (!current.choices || current.choices.length === 0) return;
+
                 const selected = current.choices[selectedIndex];
+                if (!selected) return;
+
                 if (selected.jump === "htmlTitle" || selected.jump === "title") {
                     showHtmlTitle();
                     return;
@@ -902,29 +1070,6 @@
             }
         }
 
-        function renderChoices(choices) {
-            choicesContainer.innerHTML = "";
-            choices.forEach((choice, index) => {
-                const div = document.createElement("div");
-                div.className = "choice";
-                div.style.cursor = "pointer";
-                if (index === selectedIndex) {
-                    div.classList.add("selected");
-                    div.textContent = "　" + choice.text;
-                } else {
-                    div.textContent = "　　" + choice.text;
-                }
-                div.addEventListener("click", () => {
-                    selectedIndex = index;
-                    renderChoices(choices);
-                    setTimeout(() => {
-                        handleEnter();
-                    }, 100);
-                });
-                choicesContainer.appendChild(div);
-            });
-        }
-
         function nextEvent() {
             while (true) {
                 const current = scenario[currentIndex];
@@ -932,10 +1077,52 @@
                     console.error("Scenario out:", currentIndex);
                     return;
                 }
+
                 if (current.label) {
                     currentIndex++;
                     continue;
                 }
+
+                if (current.if && !checkCondition(current.if)) {
+                    currentIndex++;
+                    continue;
+                }
+
+                if (current.set) {
+                    flags[current.set] = true;
+                }
+
+                if (current.type === "battle") {
+                    hideAllScreens();
+                    battleScreen.style.display = "flex";
+
+                    if (current.image) battleImage.src = current.image;
+
+                    battleItemList.innerHTML = "";
+                    if (current.items && current.items.length > 0) {
+                        current.items.forEach(item => {
+                            const li = document.createElement("li");
+                            li.textContent = "・" + item;
+                            battleItemList.appendChild(li);
+                        });
+                    } else {
+                        battleItemList.innerHTML = "<li>なし</li>";
+                    }
+
+                    typeText(current.text || "", battleDialogText, battleNextMark);
+                    typingFinished = () => {
+                        if (current.choices) {
+                            renderChoices(current.choices, battleChoicesContainer);
+                        }
+                    };
+                    return;
+                }
+
+                if (document.getElementById("gameScreen").style.display !== "flex") {
+                    hideAllScreens();
+                    document.getElementById("gameScreen").style.display = "flex";
+                }
+
                 if (current.image) {
                     gameImage.src = current.image;
                 }
@@ -1037,18 +1224,22 @@
                 }
             }
 
-            if (current && current.type === "choice") {
-                if (e.key === "ArrowDown") {
-                    selectedIndex++;
-                    if (selectedIndex >= current.choices.length) selectedIndex = 0;
-                    renderChoices(current.choices);
-                }
-                if (e.key === "ArrowUp") {
-                    selectedIndex--;
-                    if (selectedIndex < 0) selectedIndex = current.choices.length - 1;
-                    renderChoices(current.choices);
+            if (current && (current.type === "choice" || current.type === "battle")) {
+                const container = current.type === "battle" ? battleChoicesContainer : choicesContainer;
+                if (current.choices && current.choices.length > 0) {
+                    if (e.key === "ArrowDown") {
+                        selectedIndex++;
+                        if (selectedIndex >= current.choices.length) selectedIndex = 0;
+                        renderChoices(current.choices, container);
+                    }
+                    if (e.key === "ArrowUp") {
+                        selectedIndex--;
+                        if (selectedIndex < 0) selectedIndex = current.choices.length - 1;
+                        renderChoices(current.choices, container);
+                    }
                 }
             }
+
             if (e.key === "Enter") {
                 handleEnter();
             }
@@ -1064,7 +1255,6 @@
                     currentIndex = parseInt(savedIndex, 10);
                 }
             }
-
 
             if (nextMark) {
                 nextMark.addEventListener("click", () => {
