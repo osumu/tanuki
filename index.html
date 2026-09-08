@@ -82,7 +82,6 @@
             color: #111;
         }
 
-        /* 保存完了メッセージのポップアップ */
         #save-toast {
             position: fixed;
             top: 50px;
@@ -184,7 +183,6 @@
             color: #000000;
         }
 
-        /* 全体の外枠のみ指定 */
         .battle-container {
             width: 90%;
             max-width: 600px;
@@ -229,7 +227,13 @@
             object-fit: contain;
         }
 
-        /* 下段：選択 */
+        #battleItemList,
+        #battleSkillList {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin: 0;
+        }
+
         .battle-choices-box {
             height: 100px;
             font-size: 14px;
@@ -241,10 +245,8 @@
             margin-bottom: 4px;
         }
 
-        #battleItemList {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .hp {
+            margin-bottom: 4px;
         }
 
         #battleItemList li {
@@ -533,12 +535,18 @@
                 <div class="battle-dialog-text" id="battleDialogText"></div>
                 <div id="battleNextMark" class="next-mark">▼</div>
             </div>
+            <span class="hp" id="herodata"><!--例：　[たぬき]のHP：[50 / 100]--></span>
+            <span class="hp" id="enemydata"><!--例：　[鬼]のHP：[30 / 100]--></span>
             <div class="battle-image-container">
                 <img id="battleImage" src="" alt="Battle Image">
             </div>
             <div class="battle-items-box">
                 <div class="panel-title">アイテム</div>
                 <ul id="battleItemList"></ul>
+            </div>
+            <div class="battle-items-box">
+                <div class="panel-title">特技</div>
+                <ul id="battleSkillList"></ul>
             </div>
             <div class="battle-choices-box">
                 <div class="choices" id="battleChoices"></div>
@@ -590,11 +598,9 @@
         const nextMark = document.getElementById("nextMark");
         const gameImage = document.getElementById("gameImage");
         const battleScreen = document.getElementById("battleScreen");
-        const battleImage = document.getElementById("battleImage");
         const battleNameBox = document.getElementById("battleNameBox");
-        const battleDialogText = document.getElementById("battleDialogText");
+        const battleNextMark = document.getElementById("battleNextMark");
         const battleChoicesContainer = document.getElementById("battleChoices");
-        const battleItemList = document.getElementById("battleItemList");
 
         let currentSegments = [];
         let justSkipped = false;
@@ -619,15 +625,29 @@
             return !!flags[condition];
         }
 
-        function updateNameBox(name) {
-            if (!nameBox) return;
+        function updateNameBox(name, targetBox = nameBox) {
+            if (!targetBox) return;
 
             if (name && name.trim() !== "") {
-                nameBox.textContent = name;
-                nameBox.style.display = "inline-block";
+                targetBox.textContent = name;
+                targetBox.style.display = "inline-block";
             } else {
-                nameBox.textContent = "";
-                nameBox.style.display = "none";
+                targetBox.textContent = "";
+                targetBox.style.display = "none";
+            }
+        }
+
+        function renderList(listData, targetElement) {
+            if (!targetElement) return;
+            targetElement.innerHTML = "";
+            if (listData && listData.length > 0) {
+                listData.forEach(item => {
+                    const li = document.createElement("li");
+                    li.textContent = item;
+                    targetElement.appendChild(li);
+                });
+            } else {
+                targetElement.innerHTML = "<li>なし</li>";
             }
         }
 
@@ -1121,30 +1141,18 @@
                     hideAllScreens();
                     battleScreen.style.display = "flex";
 
-                    if (battleNameBox) {
-                        if (current.name && current.name.trim() !== "") {
-                            battleNameBox.textContent = current.name;
-                            battleNameBox.style.display = "block";
-                        } else {
-                            battleNameBox.textContent = "";
-                            battleNameBox.style.display = "none";
-                        }
-                    }
+                    updateNameBox(current.name, battleNameBox);
+                    if (current.image) document.getElementById("battleImage").src = current.image;
 
-                    if (current.image) battleImage.src = current.image;
+                    const heroDataEl = document.getElementById("herodata");
+                    const enemyDataEl = document.getElementById("enemydata");
+                    if (heroDataEl) heroDataEl.textContent = current.heroHp || "";
+                    if (enemyDataEl) enemyDataEl.textContent = current.enemyHp || "";
 
-                    battleItemList.innerHTML = "";
-                    if (current.items && current.items.length > 0) {
-                        current.items.forEach(item => {
-                            const li = document.createElement("li");
-                            li.textContent = "・" + item;
-                            battleItemList.appendChild(li);
-                        });
-                    } else {
-                        battleItemList.innerHTML = "<li>なし</li>";
-                    }
+                    renderList(current.items, document.getElementById("battleItemList"));
+                    renderList(current.skills, document.getElementById("battleSkillList"));
 
-                    typeText(current.text || "", battleDialogText, battleNextMark);
+                    typeText(current.text || "", document.getElementById("battleDialogText"), battleNextMark);
                     typingFinished = () => {
                         if (current.choices && current.choices.length > 0) {
                             renderChoices(current.choices, battleChoicesContainer);
