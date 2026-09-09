@@ -1,21 +1,7 @@
-const storyVoice = (() => {
-    const c = {};
-    return {
-        play: s => {
-            if (!s) return;
-            const a = c[s] || (c[s] = new Audio(s)).cloneNode(true);
-            a.currentTime = 0;
-            a.play().catch(e => console.warn("音声を再生できません:", s, e));
-        }
-    };
-})();
-
-
-
-
 function getScenario() {
     return [
         { label: "prologue" },
+        { music: "prologue", path: "prologue.mp3" },
         { type: "message1", image: "test.png", name: "解説", text: "ぼくはたぬき。どこにでもいるふつうのたぬき。\n今日は友達のひよこ、ねこと山の中をさんさくしている。" },
         { type: "message1", image: "prologue1.png", name: "解説", text: "しばらく歩いていると、ふいに パーン パパーン と音がした。", sounds: { 10: "ban.mp3", 18: "ban.mp3" } },
         { type: "message1", image: "prologue1.png", name: "たぬき、ひよこ、ねこ", text: "「？」「？」「？」\nみんなで首をかしげた。" },
@@ -28,6 +14,7 @@ function getScenario() {
         { type: "message1", image: "prologue3.png", name: "解説", text: "何かが動いた！\n\nまた動いた。" },
         { type: "message1", image: "prologue2.png", name: "解説", text: "好奇心がおさえられなくて、近づいてみた。" },
         { type: "message1", image: "prologue4.png", name: "たぬき、ひよこ、ねこ", text: "（あっ！）\n\n誰か小屋から出てきた！\nねこが何かにとびついた！" },
+        { end: "prologue" },
         { type: "message1", image: "black.png", name: "？？", text: "パーン！！", sounds: { 0: "ban.mp3" } },
         { type: "message1", image: "black.png", name: "たぬき", text: "「うっ！」" },
         { type: "choice", image: "black.png", name: "タイトルへ", text: "　", choices: [{ text: "タイトルへ", jump: "htmlTitle" }] },
@@ -381,7 +368,7 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "上品マダム", text: "「えーっと、君は３つの試練を合格したのよ！！（たぬき（うんそこ分かってる））」" },
         { type: "choice", image: "test.png", name: "上品マダム", text: "「なので、この３つの選択で、あなたのこれからの道が変わりますわ！では選んでね！」", choices: [{ text: "きつねになって現実世界に戻る", jump: "kitsune" }, { text: "たぬきになって現実世界に戻りたいなら、もう一つの場所をクリアする", jump: "tanuki" }, { text: "上品ムッシュになって上品マダムと一緒に暮らす", jump: "jouhinmousieur" }] },
         { label: "kitsune" },
-        { type: "message1", image: "test.png", name: "上品マダム", text: "「あと、天上から見ていた今のお友達のニュースをお伝えしますわ。あなたのお友達のひよこと猫は、あなたを殺した罪で逮捕されました。猫は殺人罪で無期拘禁刑、ひよこは幇助罪で７年の拘禁刑です。とりあえず、二人の人生を話すわ。」" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「あと、天上から見ていた今のお友達のニュースをお伝えしますわ。あなたのお友達のひよこと猫は、あなたを殺した罪で逮捕されました。猫は殺人罪で２０年の拘禁刑、ひよこは幇助罪で７年の拘禁刑です。とりあえず、二人の人生を話すわ。」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「あなたが殺される前の話だわ。ひよこは木の上で生まれたの。暮らしている中で、兄弟が多すぎて窮屈だったから家を出たの。」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「猫は、飼われていた猫から生まれたんだけども、子どもが多すぎて捨てられたわ。」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「森を歩いていた２人はばったり会って、親がいない同士、仲良くなったわ。」" },
@@ -401,7 +388,7 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "上品マダム", text: "「...」" },
         { type: "gameClear", image: "test.png", name: "解説", text: "「その場でたぬきは泣き崩れた。上品マダムはただただ立ち尽くしていた。」" },
         { label: "tanuki" },
-        { type: "message1", image: "test.png", name: "上品マダム", text: "「あと、天上から見ていた今のお友達のニュースをお伝えしますわ。あなたのお友達のひよこと猫は、あなたを殺した罪で逮捕されました。猫は殺人罪で無期拘禁刑、ひよこは幇助罪で７年の拘禁刑です。とりあえず、二人の人生を話すわ。」" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「あと、天上から見ていた今のお友達のニュースをお伝えしますわ。あなたのお友達のひよこと猫は、あなたを殺した罪で逮捕されました。猫は殺人罪で２０年の拘禁刑、ひよこは幇助罪で７年の拘禁刑です。とりあえず、二人の人生を話すわ。」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「あなたが殺される前の話だわ。ひよこは木の上で生まれたの。暮らしている中で、兄弟が多すぎて窮屈だったから家を出たの。」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「猫は、飼われていた猫から生まれたんだけども、子どもが多すぎて捨てられたわ。」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「森を歩いていた２人はばったり会って、親がいない同士、仲良くなったわ。」" },
@@ -421,7 +408,7 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "上品マダム", text: "「...」" },
         { type: "gameClear", image: "test.png", name: "解説", text: "「その場でたぬきは泣き崩れた。上品マダムはただただ立ち尽くしていた。」" },
         { label: "jouhinmousieur" },
-        { type: "message1", image: "test.png", name: "上品マダム", text: "「あと、天上から見ていた今のお友達のニュースをお伝えしますわ。あなたのお友達のひよこと猫は、あなたを殺した罪で逮捕されました。猫は殺人罪で無期拘禁刑、ひよこは幇助罪で７年の拘禁刑です。とりあえず、二人の人生を話すわ。」" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「あと、天上から見ていた今のお友達のニュースをお伝えしますわ。あなたのお友達のひよこと猫は、あなたを殺した罪で逮捕されました。猫は殺人罪で２０年の拘禁刑、ひよこは幇助罪で７年の拘禁刑です。とりあえず、二人の人生を話すわ。」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「あなたが殺される前の話だわ。ひよこは木の上で生まれたの。暮らしている中で、兄弟が多すぎて窮屈だったから家を出たの。」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「猫は、飼われていた猫から生まれたんだけども、子どもが多すぎて捨てられたわ。」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「森を歩いていた２人はばったり会って、親がいない同士、仲良くなったわ。」" },
@@ -654,7 +641,7 @@ function getScenario() {
         { type: "battle", name: "たぬき", text: "いきなりおそってきた！", image: "test.png", heroHp: "100 / 100", enemyHp: "100 / 100", items: ["剣", "盾", "弓矢"], skills: ["攻撃"], choices: [{ text: "剣で戦う", jump: "sattack" }, { text: "逃げる", jump: "nt" }] },
         { label: "sattack" },
         { type: "battle", name: "たぬき", text: "ザン　よし！１人倒した！けど何かを忘れている気が...まぁいいや", image: "test.png", heroHp: "100 / 100", enemyHp: "100 / 100", items: [], skills: ["攻撃"] },
-        { type: "message1", image: "tenminuteslater.png", name: "解説", text: "「TEN MINUTES LATER...」", sounds: { 0: "tenminuteslater.mp3" } },
+        { type: "message1", image: "tenminuteslater.jpg", name: "解説", text: "「TEN MINUTES LATER...」", sounds: { 0: "tenminuteslater.mp3" } },
         { type: "message1", image: "test.png", name: "たぬき", text: "ザンザン　ふぅ...結構倒したな...剣も盾もボロボロだ...もう使えないな...", sounds: { 0: "zanzan.mp3" } },
         { type: "message1", image: "test.png", name: "？？", text: "ヒュ～", sounds: { 0: "wind.mp3" } },
         { type: "message1", image: "test.png", name: "たぬき", text: "「？」なんだ？" },
@@ -667,11 +654,11 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "鬼", text: "「一番最後に残ったやつは幽霊と化して、ここでお前を粉々にしないと天国にも地獄にもこの世にも戻れない」" },
         { type: "message1", image: "test.png", name: "たぬき", text: "（ヒィィィ）と、とりあえず戦おうじゃないか。（鬼「ああ」）" },
         { type: "message1", image: "test.png", name: "解説", text: "相手からの先制攻撃！" },
-        { type: "message1", image: "test.png", name: "たぬき", text: "ザン　まずい！威力が強すぎる！ならぼくも！剣と盾は使えないから弓矢！", sounds: { 0: "zanzan.mp3" } },
+        { type: "message1", image: "test.png", name: "たぬき", text: "ザン　まずい！威力が強すぎる！ならぼくも！剣と盾は使えないから弓矢！", sounds: { 0: "zan.mp3" } },
         { type: "message1", image: "test.png", name: "？？", text: "ヒューン　スパッ" },
         { type: "message1", image: "test.png", name: "たぬき", text: "ええええ！？相手の体を通り抜けた！？" },
         { type: "message1", image: "test.png", name: "鬼", text: "「オレは実体がないから矢を飛ばしたってすり抜けるだけだぞ！剣と盾は特別な効果があるからオレにも効くのに...」「とどめだっ」" },
-        { type: "gameOver", image: "test.png", name: "たぬき", text: "ザン　ううっ！", sounds: { 0: "zanzan.mp3" } },
+        { type: "gameOver", image: "test.png", name: "たぬき", text: "ザン　ううっ！", sounds: { 0: "zan.mp3" } },
         { label: "ssgover" },
         { type: "message1", image: "test.png", name: "たぬき", text: "「よしっ！！剣、盾、元気が出る水にしたぞ！とりあえず剣を使おう...！まずあの人をたおすぞー！どこだー？」" },
         { type: "message1", image: "test.png", name: "鬼", text: "「おおおい」" },
@@ -694,7 +681,7 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "たぬき", text: "あ...全部飲まれた..." },
         { type: "message1", image: "test.png", name: "？？", text: "ザンザン", sounds: { 0: "zanzan.mp3" } },
         { type: "message1", image: "test.png", name: "たぬき", text: "うっ！背中に激痛が...！！あ...ナイフでやられたんだ...！！元気の水...ない！あ！さっきのまれたんだった！！じゃあ盾と剣で...！？ない！なんで？\nもしかしてさっきドン！なったときにとられた！！？" },
-        { type: "gameOver", image: "test.png", name: "たぬき", text: "「ん！？ああ　さっきのチビ！剣＆盾持ってる！取りかえさな...」ザン　ううう...！！！！　もう...ダメ...", sounds: { 20: "zanzan.mp3" } },
+        { type: "gameOver", image: "test.png", name: "たぬき", text: "「ん！？ああ　さっきのチビ！剣＆盾持ってる！取りかえさな...」ザン　ううう...！！！！　もう...ダメ...", sounds: { 20: "zan.mp3" } },
         { label: "ssa" },
         { type: "message1", image: "test.png", name: "たぬき", text: "あﾞあﾞーリンゴうめえーって...　え？食べちゃった...。ま、まあいいや戦うぞ！" },
         { type: "message1", image: "test.png", name: "たぬき", text: "「まずはあの人を倒して...かかってこい！」" },
@@ -704,21 +691,37 @@ function getScenario() {
 };
 
 (function () {
-    let l = "", i = -1;
-    setInterval(() => {
-        const d = document.getElementById("dialogText");
-        if (!d || typeof scenario == "undefined" || typeof currentIndex == "undefined") return;
-        try {
-            const e = scenario[currentIndex];
-            if (!e) return;
-            if (currentIndex !== i) { i = currentIndex; l = ""; }
-            const t = d.textContent || "";
-            if (t.length < l.length) { l = t; return; }
-            if (t === l) return;
-            const s = e.sounds || {};
-            for (let x = l.length; x < t.length; x++) if (s.hasOwnProperty(x)) storyVoice.play(s[x]);
-            l = t;
-        } catch (err) { console.warn("音声処理エラー:", err); }
-    }, 5);
-})();
+    const V = {}, P = s => {
+        if (!s) return;
+        let p = V[s];
+        if (!p) {
+            const b = new Audio(s);
+            p = V[s] = [b.cloneNode(), b.cloneNode(), b.cloneNode(), b.cloneNode()];
+        }
+        for (const a of p) { if (a.paused) { a.currentTime = 0; a.play().catch(() => { }); return; } }
+        p[0].currentTime = 0; p[0].play().catch(() => { });
+    };
 
+    let lt = "", li = -1, cs = {};
+    const d = document.getElementById("dialogText");
+    if (!d) return;
+
+    new MutationObserver(() => {
+        if (typeof scenario == "undefined" || typeof currentIndex == "undefined") return;
+
+        if (currentIndex !== li) {
+            li = currentIndex;
+            lt = "";
+            const e = scenario[currentIndex];
+            cs = e && e.sounds ? e.sounds : {};
+        }
+
+        const t = d.textContent || "";
+        if (t.length <= lt.length) { lt = t; return; }
+
+        for (let i = lt.length; i < t.length; i++) {
+            if (cs[i]) P(cs[i]);
+        }
+        lt = t;
+    }).observe(d, { childList: true, characterData: true, subtree: true });
+})();

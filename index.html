@@ -591,6 +591,7 @@
         let saveProgressEnabled = true;
 
         let flags = {};
+        const bgmList = {};
 
         const nameBox = document.getElementById("nameBox");
         const dialogText = document.getElementById("dialogText");
@@ -648,6 +649,40 @@
                 });
             } else {
                 targetElement.innerHTML = "<li>なし</li>";
+            }
+        }
+
+
+        function handleAudioEvent(current) {
+            console.log("handleAudioEvent called with:", current);
+            if (current.music) {
+                console.log("Starting BGM for:", current.music);
+                const key = current.music;
+                if (bgmList[key]) {
+                    bgmList[key].pause();
+                    bgmList[key].currentTime = 0;
+                }
+
+                const audio = new Audio(current.path);
+                audio.loop = false;
+                audio.play().catch(error => {
+                    console.error("BGM再生失敗:", error);
+                    document.addEventListener('click', () => {
+                        audio.play();
+                    }, { once: true });
+                });
+
+                bgmList[key] = audio;
+            }
+
+            if (current.end) {
+                console.log("Stopping BGM for:", current.end);
+                const key = current.end;
+                if (bgmList[key]) {
+                    bgmList[key].pause();
+                    bgmList[key].currentTime = 0;
+                    delete bgmList[key];
+                }
             }
         }
 
@@ -1136,6 +1171,8 @@
                 if (current.set) {
                     flags[current.set] = true;
                 }
+
+                handleAudioEvent(current);
 
                 if (current.type === "battle") {
                     hideAllScreens();
