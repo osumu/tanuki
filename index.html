@@ -40,6 +40,86 @@
             }
         }
 
+        #titleScreen {
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: url("s2.png") center / contain no-repeat, #e8e3d8;
+        }
+
+        .stitle {
+            text-align: center;
+            margin-bottom: 45px;
+            color: #c49a3a;
+        }
+
+        .stitle h1 {
+            margin: 0;
+            font-size: clamp(40px, 7vw, 66px);
+            line-height: 1.05;
+            font-weight: 500;
+            letter-spacing: .08em;
+            text-shadow: 1px 1px 0 #50370f40;
+        }
+
+        .ssub {
+            margin-top: 15px;
+            font-size: clamp(17px, 3vw, 25px);
+            letter-spacing: .16em;
+        }
+
+        .schoices {
+            width: 240px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .schoice {
+            width: 100%;
+            min-height: 55px;
+            border: 2px solid #9a3f2e;
+            border-radius: 7px;
+            background: #f0ede4dd;
+            color: #514d45;
+            font: 700 25px 'PixelMPlus', sans-serif;
+            letter-spacing: .12em;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #743022, 0 5px 8px #3c2d1e30;
+        }
+
+        .schoice:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 #743022, 0 2px 5px #3c2d1e30;
+        }
+
+        .schoice:hover {
+            background: #fffdf2f2;
+        }
+
+
+        @media(max-width:520px) {
+            #titleScreen {
+                padding: 30px 20px;
+            }
+
+            .stitle {
+                margin-bottom: 35px;
+            }
+
+            .schoices {
+                width: 85vw;
+                gap: 20px;
+            }
+
+            .schoice {
+                min-height: 68px;
+            }
+        }
+
         .screen {
             width: 100vw;
             height: 100vh;
@@ -119,7 +199,7 @@
             }
         }
 
-        #titleScreen {
+        /*#titleScreen {
             display: none;
             position: fixed;
             top: 0;
@@ -130,7 +210,7 @@
             z-index: 4000;
             justify-content: center;
             align-items: center;
-        }
+        }*/
 
         .img-wrapper {
             position: relative;
@@ -362,6 +442,54 @@
             color: #7d7d05;
         }
 
+        #EndScreen {
+            position: relative;
+            background-color: #000;
+            color: #fff;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .staff-roll-container {
+            width: 100%;
+            height: 80%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .staff-roll-content {
+            position: absolute;
+            width: 100%;
+            top: 100%;
+            /* 初期位置：画面下枠外 */
+            text-align: center;
+            white-space: pre-wrap;
+            font-size: clamp(16px, 2.5vw, 22px);
+            line-height: 2;
+        }
+
+        @keyframes staffRollAnimation {
+            0% {
+                top: 100%;
+            }
+
+            100% {
+                top: -150%;
+            }
+        }
+
+        .is-rolling {
+            animation: staffRollAnimation 20s linear forwards;
+        }
+
+        #endChoicesContainer {
+            position: absolute;
+            bottom: 40px;
+            z-index: 10;
+        }
+
         #gameScreen {
             display: none;
             flex-direction: column;
@@ -424,7 +552,10 @@
 
         .choice {
             text-align: left;
-            width: 250px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
         }
 
 
@@ -464,7 +595,7 @@
         </div>
     </div>
 
-    <div class="screen" id="titleScreen">
+    <!--<div class="screen" id="titleScreen">
         <div class="img-wrapper">
             <img id="title-image" src="startscreen.png" usemap="#TitleMap" alt="Title">
             <map name="TitleMap" id="TitleMap">
@@ -478,7 +609,20 @@
                     onclick="event.preventDefault(); showSettings();" alt="Settings">
             </map>
         </div>
+    </div>-->
+    <div class="screen" id="titleScreen">
+        <header class="stitle">
+            <h1>たぬき<br>の運命</h1>
+            <div class="ssub">〜どうなる たぬき!?〜</div>
+        </header>
+        <section class="schoices" aria-label="選択肢">
+            <button class="schoice" type="button" onclick="event.preventDefault(); startGame();">プレイ</button>
+            <button class="schoice" type="button" onclick="event.preventDefault(); showHowToPlay();">遊び方</button>
+            <button class="schoice" type="button" onclick="event.preventDefault(); showSettings();">設定</button>
+        </section>
+
     </div>
+
 
     <div class="screen" id="HowToPlayScreen">
         <div class="sub-title">遊び方</div>
@@ -557,6 +701,15 @@
     <div class="screen" id="gameClearScreen">
         <div class="cleartext">開発者</div>
         <div style="font-size: clamp(16px, 3vw, 30px);">ここまでしかつくってないよーん</div>
+    </div>
+
+    <div id="EndScreen" class="screen" style="display: none;">
+        <div class="staff-roll-container">
+            <div id="staffRollContent" class="staff-roll-content"></div>
+        </div>
+        <div id="endChoicesContainer" class="choices" style="display: none;">
+            <div class="choice selected" id="restartBtn">タイトルに戻る</div>
+        </div>
     </div>
 
     <div class="screen" id="gameScreen">
@@ -654,7 +807,6 @@
 
 
         function handleAudioEvent(current) {
-            console.log("handleAudioEvent called with:", current);
             if (current.music) {
                 console.log("Starting BGM for:", current.music);
                 const key = current.music;
@@ -705,6 +857,39 @@
                 setTimeout(() => {
                     toast.style.display = "none";
                 }, 2000);
+            }
+        }
+
+        function showStaffRoll(current) {
+            hideAllScreens();
+
+            const endScreen = document.getElementById("EndScreen");
+            if (!endScreen) {
+                console.error("endScreen要素が見つかりません。HTMLのIDを確認してください。");
+                return;
+            }
+
+            endScreen.style.display = "flex";
+
+            const staffContent = document.getElementById("staffRollContent");
+            const choicesContainer = document.getElementById("endChoicesContainer");
+
+            if (staffContent) {
+                staffContent.textContent = current.text || "";
+                staffContent.classList.remove("is-rolling");
+                void staffContent.offsetWidth; // リフロー発生
+                staffContent.classList.add("is-rolling");
+
+                staffContent.onanimationend = () => {
+                    if (choicesContainer) choicesContainer.style.display = "flex";
+                };
+            }
+
+            if (restartBtn) {
+                restartBtn.tabIndex = 0;
+                restartBtn.role = "button";
+                restartBtn.onclick = () => location.reload();
+                document.onkeydown = e => e.key === "Enter" && location.reload();
             }
         }
 
@@ -853,6 +1038,7 @@
             if (document.getElementById("startScreen")) document.getElementById("startScreen").style.display = "none";
             if (document.getElementById("gameOverScreen")) document.getElementById("gameOverScreen").style.display = "none";
             if (document.getElementById("gameClearScreen")) document.getElementById("gameClearScreen").style.display = "none";
+            if (document.getElementById("EndScreen")) document.getElementById("EndScreen").style.display = "none";
             if (document.getElementById("HowToPlayScreen")) document.getElementById("HowToPlayScreen").style.display = "none";
             if (document.getElementById("SettingsScreen")) document.getElementById("SettingsScreen").style.display = "none";
             if (battleScreen) battleScreen.style.display = "none";
@@ -1215,6 +1401,11 @@
                 }
                 if (current.type === "title") {
                     showHtmlTitle();
+                    return;
+                }
+
+                if (current.type === "end") {
+                    showStaffRoll(current);
                     return;
                 }
 
