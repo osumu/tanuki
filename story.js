@@ -475,7 +475,7 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "上品マダム", text: "「とりあえず、次の試練の説明をするわ！次の試練は、私の妹の世話をすることよ！私の妹は私と違って下品なのよぉ～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「だから、あだ名は下品マダムよ！」" },
         { type: "gameClear", image: "test.png", name: "たぬき", text: "下下下下品！？あのとき迷った選択の...しかも姉は上品（？）なのに..." },
-        { label: "jouhinmousieur" },
+        { label: "jouhinmushu" },
         { type: "message1", image: "test.png", name: "たぬき", text: "上品ムッシュになって上品マダムと暮らす！" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「あらぁーこれからよろしくね！上品ム...ってボタンどっちだっけ！？」" },
         { type: "message1", image: "test.png", name: "たぬき", text: "え？" },
