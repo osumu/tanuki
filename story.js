@@ -474,7 +474,136 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "たぬき", text: "（ババアこわっ💦（あっ））" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「とりあえず、次の試練の説明をするわ！次の試練は、私の妹の世話をすることよ！私の妹は私と違って下品なのよぉ～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～」" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「だから、あだ名は下品マダムよ！」" },
-        { type: "gameClear", image: "test.png", name: "たぬき", text: "下下下下品！？あのとき迷った選択の...しかも姉は上品（？）なのに..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "下下下下品！？あのとき迷った選択の...しかも姉は上品（？）で妹は下品！？なんという姉妹！？" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「私は本当に上品よ！てか話ずれたな...私の妹とのその夫、下品夫妻のお世話をするの！」" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「私の説明はここまで、あとはクソ妹に聞いて💢」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "なんでクソ？というか怒っているよねこのババア...あっ" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「じゃあ行ってらっしゃい！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "えーっと下品夫妻はどこだろう？" },
+        { type: "message1", image: "test.png", name: "？？？", text: "「おい！たぬやろう！来い！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "え？まさかあれが下品夫妻！？とりあえず早く行こう　怒られるかもしれない...。" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "というかたぬやろうじゃねぇよ💢" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "着いたぞ..." },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「よく来たな。」" },
+        { type: "message1", image: "test.png", name: "下品マダム", text: "「よく来たね。」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「これから俺たちが世話をさせてあげるんだ。ありがたく思え！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「ハハハハハイ」（こっこわっ）" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「今お前がどう思っているかは知らんが...俺の義姉はなぁ、人の気持ちを読み取れるから便利なんだ。だがな、俺達には変身できる技があるのだー！」\n「ってことで自己紹介をする。」" },
+        { type: "message1", image: "test.png", name: "下品マダム", text: "「私からいく」「私の名前はタヌミ。自称下品マダムよ。年齢は４７よ。死の原因は交通事故よ。私には武勇伝があるんだ。」" },
+        { type: "message1", image: "test.png", name: "下品マダム", text: "「私が死んだのは３０の時。」" },
+        { type: "message1", image: "test.png", name: "下品マダム", text: "「クソ姉と道端で会って、一緒に歩きたくもないのに強制的に歩かされて横断歩道を渡っているとき、信号無視の車がちょうど私のところに走ってきたわ。」" },
+        { type: "message1", image: "test.png", name: "下品マダム", text: "「これはチャンスと思ってクソ姉も巻き込んだのよ。すごいでしょ！（まああのあとめちゃくちゃ説教されたけどね）」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "一気に話しすぎ...ってか武勇伝じゃなくね？口悪いし..." },
+        { type: "message1", image: "test.png", name: "下品マダム", text: "「次は、タヌオよ」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「あー？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（なんか下品マダムよりもこわーい...気をつけよ...。）" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「オレの名前はタヌオ。自称下品ムッシュだ。下品ムッシュ大王様とよべ。」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "だだだ大王！？" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「年齢は４７。死の原因は落下死だ。俺の世話はちゃんとしろ。」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「じゃあ早速、家の案内をする。」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「ハイイイー！」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「ビシッと！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「ハイ！！」（おーこわ...）" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「始める。ここが玄関、チャイムはここだ。靴は脱がない。洋式だからな。」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「でここを曲がって、洗面所とトイレがある。」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「でここは、ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「分かったか？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「はい！」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「じゃあテレビを見るか......おいたぬやろう！」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「お前まだ自己紹介してないな！自己紹介しろ！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「はい！ぼくは普通のたぬき、年齢は８歳です。銃で殺されました。」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「うむよいよい」「おいタヌミ」" },
+        { type: "message1", image: "test.png", name: "下品マダム", text: "「はい」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ＆マダム", text: "ゴニョゴニョ" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（？？？）" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「これからお前のことたぬくそやろうと呼ぶ！[style='font-weight:bold;font-size:40px;']いいな？]」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "名前長っ...とそこじゃなくてたぬくそやろうってもう💢でも従わないと殺されるかも..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "どどどどうしよう！？あーでもない、こーでもない..." },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「早くしろ！」" },
+        { type: "choice", image: "test.png", name: "たぬき", text: "決めた！", choices: [{ text: "たぬやろうでよい", jump: "goodl" }, { text: "よくない", jump: "badover" }] },
+        { label: "badover" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「すすすすみませんがご意見よろしゅうございますか？」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「あー？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「その名前、少しよろしくないと思いまして...」（できるだけ上品に...）" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「は？俺様に逆らうつもりか？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「いやそういうつもりではなくて...」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「いいやそういうつもりだ！」\n「謀反の罪で死んでもらう！」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「最後に言いたいことはあるか？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「え？ななななななななんで！？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "くっそーせっかくここまで来たのに...最後に言いたいことは...ない。でもできるだけ上品に！\nでもぼくはもう死ぬのか...ひよこと、猫に悪いな。あんな勝手に正義感に燃えちゃって..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「なっなにもございません　ですので早く殺してください。」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "ひよこ猫ありがとう。ババアだっけ？まあみんなありがとう！" },
+        { type: "gameOver", image: "test.png", name: "たぬき", text: "「パーン」", sounds: { 0: "ban.mp3" } },
+        { label: "goodl" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「ハイ！！」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「うむえらい　では早速」" },
+        { type: "message1", image: "test.png", name: "下品マダム", text: "「テレビつけて！日〇テレビ！ティーセットの準備！ほうきとちりとりを持ってきて３０分掃除！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（たくさんすぎる...えーとテレビつけて...日〇テレビっと...）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（ここでティーは何がいいんだろう？）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（うーんと聞いたほうがよさそうだけど...怒られるかもしれないし...まあ殺されることはなさそうだけど...）" },
+        { type: "choice", image: "test.png", name: "たぬき", text: "（まあ戸棚にはウーロン茶と紅茶があるけど聞く？うーん...）", choices: [{ text: "ウーロン茶", jump: "uron" }, { text: "紅茶", jump: "kouchaover" }, { text: "聞く", jump: "askc" },] },
+        { label: "kouchaover" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "よいしょっと紅茶を入れてっと　ぼくはこの香り好きなんだよね..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "っていうか本当にあっているのかな？あってなかったら...殺されるとかなしだよね？\nまあいいや、その時はその時で頑張ろう..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "どのぐらいの熱さがいいかな？このぐらいでいっか..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "よしじゃあ運んでっと上品に..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「できました。紅茶でございます。」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「は？」" },
+        { type: "message1", image: "test.png", name: "下品マダム", text: "「あらここまでこれたのに...ハハハ　だっせ～ｗ」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（え　間違いだった...あと何か聞こえたような...）" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "俺とタヌミは紅茶が大嫌いなんだ。あの匂いと言ったらたまったもんじゃない..." },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "ご主人様と奥様が嫌いなお茶を持ってきてどうする？ってことで俺の手で殺す。日本刀で一切りだ。死の覚悟はできたか？" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（せっかくここまで来たのにもったいない...しかもあのくそやろうにの手で殺されるなんて...なんで大嫌いなお茶が戸棚にあるんだよ...てかあいつどこ行った？まさか日本刀に変身した？）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（自分で自害したほうがましなのに...まあ聞いてみるか...）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「あの自分でもよろしいですか？」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「あ？まあいいけどよ」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「ありがとうございます。この剣で自害してもよろしいですか？」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「いつでもいいぞ。」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（いままでみんなありがとう！ひよこと猫、助けられなくてごめんね！）" },
+        { type: "gameOver", image: "test.png", name: "？？", text: "グサッ　パーン！", sounds: { 0: "pan.mp3" } },
+        { label: "askc" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「あっあの　テレビ中申し訳ございませんが紅茶とウーロン茶どちらがよろしいですか？」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「あの聞くのも良いが自分で考えてくれんか？」" },
+        { type: "message1", image: "test.png", name: "下品マダム", text: "「片方より爽やかで甘みと苦みがあるお茶よ」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（ふーん　爽やかで甘みと苦みがあるお茶か...でもわかりそうな気がして、わからないんだよね...）" },
+        { type: "choice", image: "test.png", name: "下品ムッシュ", text: "（あっ分かったかも！運で行かなくても大丈夫だな！よし！）", choices: [{ text: "ウーロン茶", jump: "uron" }, { text: "紅茶", jump: "kouchaover" }] },
+        { label: "uron" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "よいしょっとウーロン茶を入れてっと　ぼくはこの香り苦手なんだよね..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "っていうか本当にあっているのかな？あってなかったら...殺されるとかなしだよね？\nまあいいや、その時はその時で頑張ろう..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "どのぐらいの熱さがいいかな？このぐらいでいっか..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "よしじゃあ運んでっと上品に..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「できました。ウーロン茶でございます。」" },
+        { type: "message1", image: "test.png", name: "下品マダム", text: "「フフ　このたぬくそやろう意外と気が利くわねぇ」「は～」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（上品にしすぎて上品ムッシュになっちゃいそう...）" },
+        { type: "message1", image: "test.png", name: "下品マダム", text: "「やっぱウーロン茶は、おいしい！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "は？なんていう格好💢でも顔に表しちゃダメ！殺されるかもしれないから...（それにしてもウーロン茶がいいんだねえ）" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「次の話をする。あと掃除はできたか？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（あ、やば..ティーセットに気を取られて忘れてた...）「すみません、出来ていません、本当に申し訳ございません」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「は？できてないだと？バカかティーセットの用意と掃除ぐらい一緒にできるだろうが！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（はぁ？なんだこいつやったこともないくせに！言ってやる！でも...）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「はぁぁ？！何言ってんだよてめえ！ティーセットの用意と掃除を一緒にできるわけないだろうが！自分でもやったことないくせに言うな！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "あ...言っちゃった...もう終わりだ..." },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「何だテメエ！それがこの下品ムッシュ大王様への口の利き方か？！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「すっすみません」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「もういい！こんな役立たずはいらねえ！死ね！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（やばっ　どうしよう？とりあえず物陰に隠れてっと）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（そういえば不老不死の魔法があるんだった！これをかけてっと　よし！これで絶対に死なないぞ！）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（でも一応そこにあるトンカチ持っていこうかな？でも不老不死の魔法があるし...）" },
+        { type: "choice", image: "test.png", name: "たぬき", text: "あっ！下品ムッシュがぼくのこと探してる！やばい！", choices: [{ text: "トンカチを持っていく", jump: "tonkatiover" }, { text: "その場に出る", jump: "sonobani" }] },
+        { label: "sonobani" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「ハァァァァー！」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「なんだその飛び出し方は？まあいい今回は俺とタヌミに２対１の勝負を挑み勝てばいい。勝ったら上品マダムのところに行け。」" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「では！俺たちに勝ってみろ！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「勝てるものならね！」" },
+        { type: "message1", image: "test.png", name: "？？", text: "カーンカーンカーン" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "どどどどうしよう　そうか僕には不老不死の魔法がかかってるんだった！でもこのままでは勝てないから、そこにある弓と矢を使って倒すぞ！てかなんでここに弓と矢があるの！？" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "てかやばっ　めっちゃ睨んでるし剣が頭の上まで来てる！ころされｒ" },
+        { type: "message1", image: "test.png", name: "？？", text: "ザクッ　パァァァァ" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（なっなにこれ）" },
+        { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「おい、効いてないぞ！死なないとは...まさか俺の義姉が考えた不老不死の魔法か...？チッ」" },
+        { type: "message1", image: "test.png", name: "下品マダム", text: "「なんです？それは」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（すごい量の血が出て死ぬほどのことのはずなのに...血が一滴もなく、しかも生きてる！）" },
+        { type: "gameClear", image: "test.png", name: "下品ムッシュ", text: "「ここまでしか作ってないってどいうことだ！死ね！」" },
         { label: "jyouhinmushu" },
         { type: "message1", image: "test.png", name: "たぬき", text: "上品ムッシュになって上品マダムと暮らす！" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「あらぁーこれからよろしくね！上品ム...ってボタンどっちだっけ！？」" },
@@ -501,34 +630,63 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "？？", text: "パリーン", sounds: { 0: "sara.mp3" } },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「起きないわねぇ...」" },
         { type: "message1", image: "test.png", name: "？？", text: "パリーン", sounds: { 0: "sara.mp3" } },
-        { type: "message1", image: "test.png", name: "上品マダム", text: "あームカつく！ぬきうちテスト！失格ね！" },
-        { type: "gameClear", image: "test.png", name: "上品マダム", text: "あ、ちょうどいいわ　そのまま永遠の眠りについてもらおうかしら" },
-        { type: "message1", image: "test.png", name: "たぬき", text: "" },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「あームカつく！ぬきうちテスト！失格ね！」" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「あ、ちょうどいいわ　そのまま永遠の眠りについてもらおうかしら！」" },
+        { type: "message1", image: "test.png", name: "上品ムッシュ", text: "「え？どういうこと？」" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「このまま銃で撃つのよ！」" },
+        { type: "message1", image: "test.png", name: "上品ムッシュ", text: "えー！？あのとき起きてなかったらぼくこうなってたんだ..." },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「しっかり狙いを定めて...」" },
+        { type: "message1", image: "test.png", name: "？？", text: "ドン", sounds: { 0: "don.mp3" } },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「よし、＜私の＞仕事は終わったわ。」" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「次はあなた、上品ムッシュの出番よ！」" },
+        { type: "message1", image: "test.png", name: "上品ムッシュ", text: "エッ？何をすればいいの？" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「かんたんよ！この方（〇体）を、霊長の元に運んで！そしたら彼がこの方を地縛霊に変換してくれるから！いいわね？」" },
+        { type: "message1", image: "test.png", name: "上品ムッシュ", text: "「ハーイ！」（これって何らかの法に抵触しない？まあいってきまーす！）" },
+        { type: "message1", image: "test.png", name: "？？", text: "トコトコ" },
+        { type: "message1", image: "test.png", name: "上品ムッシュ", text: "ついた！「霊長の間」って書いてある！" },
+        { type: "message1", image: "test.png", name: "上品ムッシュ", text: "「失礼しまーす！」上品マダムからこの方を地縛霊にしろと..." },
+        { type: "message1", image: "test.png", name: "霊長", text: "「わかってるぜ！ちょっと貸してみ」" },
+        { type: "message1", image: "test.png", name: "上品ムッシュ", text: "「よいしょっと...」" },
+        { type: "message1", image: "test.png", name: "霊長", text: "「&jXeiZ*tqB2a+VR'O...」" },
+        { type: "message1", image: "test.png", name: "？？", text: "ホワーッ" },
+        { type: "message1", image: "test.png", name: "上品ムッシュ", text: "（何だあれ...　魂だ！）" },
+        { type: "message1", image: "test.png", name: "霊長", text: "「よく分かったな、お前。あとは俺がやる。帰っていいぞ」\n「ご苦労さん。」" },
+        { type: "message1", image: "test.png", name: "上品ムッシュ", text: "ふぅー　仕事終わり！明日は何をするのかなぁ～？" },
+        { type: "message1", image: "test.png", name: "解説", text: "そんなことを考えながら上品ムッシュは上品マダムの元へ帰っていき、そのあとも二人は幸せに暮らしましたとさ。" },
+        { type: "message1", image: "test.png", name: "おしまい", text: "お　し　ま　い" },
+        {
+            type: "end", music: "end",
+            path: "prologue.mp3",
+            text: "\n\n\n企画\nたぬきの運命製作委員会\n\nシナリオ\nK.M.\nY.H.\n\nプログラム\nK.S.\n\n作画\nY.H.\n\n音楽\nK.S.\n\n\n\n\n\n\n\nThank you for playing!"
+        },
+        { label: "sitabutton" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「下のボタン！はやく！」" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「OK！」ポチッ" },
+        { type: "message1", image: "test.png", name: "？？", text: "ウイーン　ドン　ポフ　ゲホゲホ" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "この機械大丈夫かな..." },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「あっ　ああっ...！！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "上品マダムどしたの？" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「ああー！ボタン！押し間違えたわ！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "う、うわー！やばい！「ちょっと鏡！鏡見せて！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "う、うわあ...変なメガネに手入れされていないヒゲ...品の良さなんてかけらもない！" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「あっ思い出したわ！下品ムッシュだから[style='display: inline-flex;align-items: center;justify-content: center;width: 1.5em;height: 1.5em;border: 2px solid black;border-radius: 50%;']下]ボタンにしたんだわ！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「えー！先に思い出せよ！」" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "プルプル" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "？どうしたの？" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「ううう...」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "え、なに？" },
+        { type: "message1", image: "test.png", name: "上品マダム", text: "「ごめんだけど、あなたには消えてもらうわ。（たぬき（え？））」" },
+        { type: "message1", image: "test.png", name: "過度の潔癖症からの強迫性障害の上品マダム", text: "「汚い生き物はね、この世に必要ないのよ。名前からも見た目からも汚いアンタには[style='font-weight: bold;']存在する価値]なんかないの。」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "え...え...？" },
+        { type: "message1", image: "test.png", name: "過度の潔癖症からの強迫性障害の上品マダム", text: "「最後の最後でお別れね。今までありがとう。さようなら。」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "ままって！最後に！　ドン　うっ！", sounds: { 5: "don.mp3" } },
+        { type: "message1", image: "test.png", name: "過度の潔癖症からの強迫性障害の上品マダム", text: "「最後の最後でお別れね。今までありがとう。さようなら。」" },
+        { type: "message1", image: "test.png", name: "過度の潔癖症からの強迫性障害の上品マダム", text: "「汚いものはすべて、いなくなればいいのよ...そう、私は正しい...フフ、アハハ、アッハッハッハッハ！」" },
+        {
+            type: "end", music: "end",
+            path: "prologue.mp3",
+            text: "\n\n\n企画\nたぬきの運命製作委員会\n\nシナリオ\nK.M.\nY.H.\n\nプログラム\nK.S.\n\n作画\nY.H.\n\n音楽\nK.S.\n\n\n\n\n\n\n\nThank you for playing!"
+        },
         { label: "okinai" },
         { type: "message1", image: "test.png", name: "？？", text: "ガッシャン！", sounds: { 0: "sara.mp3" } },
         { type: "message1", image: "test.png", name: "たぬき", text: "（んんん　もう！うるさいなぁ！起きて雷落としてやる！！）ガバッ" },
@@ -784,40 +942,62 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "たぬき", text: "あﾞあﾞーリンゴうめえーって...　え？食べちゃった...。ま、まあいいや戦うぞ！" },
         { type: "message1", image: "test.png", name: "たぬき", text: "「まずはあの人を倒して...かかってこい！」" },
         { type: "message1", image: "test.png", name: "？？", text: "ザン", sounds: { 0: "zan.mp3" } },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「よし！」なんか一瞬で〇んだ..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "ぼく、強い！なんで？" },
+        { type: "message1", image: "test.png", name: "？？", text: "ザザザザザザン", sounds: { 0: "zazan.mp3" } },
+        { type: "message1", image: "test.png", name: "たぬき", text: "気持ちぃ～！（なんかぼくサイコパス？）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "まさか...リンゴの効果？" },
+        { type: "message1", image: "tenminuteslater.jpg", name: "解説", text: "「TEN MINUTES LATER...」", sounds: { 0: "tenminuteslater.mp3" } },
+        { type: "message1", image: "test.png", name: "たぬき", text: "うおおおお！よし！１００人倒したー！" },
+        { type: "message1", image: "test.png", name: "アナウンス", text: "＜＜ピーンポーンパーンポーン　たぬき様　たぬき様　ゲートの準備が完了しました　GATE１に向かってください　くりかえします　たぬき様...＞＞" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "えーっと、GATE１はどこだ？あった！レッツゴー！" },
+        { type: "message1", image: "test.png", name: "？？", text: "パッパラー", sounds: { 0: "para.mp3" } },
+        { type: "message1", image: "test.png", name: "えんま大王（えんま大王様とよべ！）（あ！忘れてました！）えんま大王様", text: "「よくやった！合格だ！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「え？」" },
+        { type: "message1", image: "test.png", name: "えんま大王様", text: "「何だよ！喜べよ！　ご・う・か・く　だっつってんだ！」「１００人たおしただろ？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「あ、あ～そういうこと？やったー！」" },
+        { type: "message1", image: "test.png", name: "えんま大王様", text: "「それで、これで地獄の試練は終わりだ。選択肢を出すから、どこに行くか選べ！」" },
+        { type: "message1", image: "test.png", name: "えんま大王様", text: "「今までいろいろな試練を乗り越えてきたが、よくがんばったな！」トン（かたをたたく）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「うん...ありがとうえんま大王様！」" },
+        { type: "message1", image: "test.png", name: "えんま大王様", text: "「ハハハ、これでこそわが挑戦者、たぬきだ！達者でな！もう帰ってくるなよ！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「はーい！」それで、この二つのゲートのどちらかに入るのか...１つ目は、猫たちを呪うのをやめ、天国でいくつか試練をクリアする！２つ目は、猫たちが許せないから、背後霊になってうしろについてやり返す！" },
+        { type: "choice", image: "test.png", name: "たぬき", text: "やばそうな選択肢しかないんですけど...！？まぁ、選ぶか...", choices: [{ text: "天国へ行く", jump: "ncurse" }, { text: "やりかえす", jump: "yarikaesu" }] },
+        { label: "yarikaesu" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "よし！背後霊になってあいつらにやり返すぞ！" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "アﾞアﾞー！なんか怒りがわいてきたー！！！" },
+        { type: "message1", image: "test.png", name: "？？？", text: "「こちらのドアにお入りください。背後霊に変換いたします。」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "この人だれだろう...？" },
+        { type: "message1", image: "test.png", name: "？？？", text: "「申し遅れました。私はえんま大王様に仕える執事でございます。」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "へ、へぇ...「ぼくはたぬきです...」" },
+        { type: "message1", image: "test.png", name: "執事", text: "「えんま大王様から聞いております。」「とりあえずドアにお入りください。」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "ハイ..." },
+        { type: "message1", image: "test.png", name: "？？", text: "ピーピー　ドカッ" },
+        { type: "message1", image: "test.png", name: "執事", text: "「末永くお幸せに...」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "なんかこわいんすけど..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「え？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「え？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「え？」" },
+
 
     ];
 };
 
-(function () {
-    const V = {}, P = s => {
+
+(() => {
+    let V = {}, P = s => {
         if (!s) return;
-        let p = V[s];
-        if (!p) {
-            const b = new Audio(s);
-            p = V[s] = [b.cloneNode(), b.cloneNode(), b.cloneNode(), b.cloneNode()];
-        }
-        for (const a of p) if (a.paused) { a.currentTime = 0; a.play().catch(() => { }); return; }
-        p[0].currentTime = 0; p[0].play().catch(() => { });
-    };
+        for (let k in V) k != s && V[k].forEach(a => (a.pause(), a.currentTime = 0));
+        let p = V[s] || (V[s] = [0, 0, 0, 0].map(_ => new Audio(s)));
+        for (let a of p) if (a.paused) return a.currentTime = 0, a.play().catch(_ => 0);
+        p[0].currentTime = 0, p[0].play().catch(_ => 0)
+    }, l = "", i = -1, c = {}, d = document.getElementById("dialogText");
 
-    let lt = "", li = -1, cs = {};
-    const d = document.getElementById("dialogText");
-    if (!d) return;
-
-    new MutationObserver(() => {
+    d && new MutationObserver(_ => {
         if (typeof scenario == "undefined" || typeof currentIndex == "undefined") return;
-
-        if (currentIndex !== li) {
-            li = currentIndex;
-            lt = "";
-            const e = scenario[currentIndex];
-            cs = e && e.sounds ? e.sounds : {};
-        }
-
-        const t = d.textContent || "";
-        if (t.length <= lt.length) { lt = t; return; }
-
-        for (let i = lt.length; i < t.length; i++) if (cs[i]) P(cs[i]);
-        lt = t;
-    }).observe(d, { childList: true, characterData: true, subtree: true });
+        i != currentIndex && (i = currentIndex, l = "", c = scenario[i]?.sounds || {});
+        let t = d.textContent || "";
+        if (t.length <= l.length) return l = t;
+        for (let n = l.length; n < t.length; n++)c[n] && P(c[n]);
+        l = t
+    }).observe(d, { childList: 1, characterData: 1, subtree: 1 });
 })();
