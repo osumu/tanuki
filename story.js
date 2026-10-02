@@ -596,14 +596,53 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「では！俺たちに勝ってみろ！」" },
         { type: "message1", image: "test.png", name: "たぬき", text: "「勝てるものならね！」" },
         { type: "message1", image: "test.png", name: "？？", text: "カーンカーンカーン" },
-        { type: "message1", image: "test.png", name: "たぬき", text: "どどどどうしよう　そうか僕には不老不死の魔法がかかってるんだった！でもこのままでは勝てないから、そこにある弓と矢を使って倒すぞ！てかなんでここに弓と矢があるの！？" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "どどどどうしよう　そうか僕には不老不死の魔法がかかってるんだった！" },
         { type: "message1", image: "test.png", name: "たぬき", text: "てかやばっ　めっちゃ睨んでるし剣が頭の上まで来てる！ころされｒ" },
         { type: "message1", image: "test.png", name: "？？", text: "ザクッ　パァァァァ" },
         { type: "message1", image: "test.png", name: "たぬき", text: "（なっなにこれ）" },
         { type: "message1", image: "test.png", name: "下品ムッシュ", text: "「おい、効いてないぞ！死なないとは...まさか俺の義姉が考えた不老不死の魔法か...？チッ」" },
         { type: "message1", image: "test.png", name: "下品マダム", text: "「なんです？それは」" },
         { type: "message1", image: "test.png", name: "たぬき", text: "（すごい量の血が出て死ぬほどのことのはずなのに...血が一滴もなく、しかも生きてる！）" },
+        { type: "choice", image: "test.png", name: "たぬき", text: "よしこのままいい感じに距離を取って...相手の剣が壊れるまで待つ？それでも待たないで降参する？不老不死の魔法には限りがあるかもしれない...どどどどうしよう？！", choices: [{ text: "待つ", jump: "matu" }, { text: "降参する", jump: "kousanover" }] },
         { type: "gameClear", image: "test.png", name: "下品ムッシュ", text: "「ここまでしか作ってないってどいうことだ！死ね！」" },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         { label: "jyouhinmushu" },
         { type: "message1", image: "test.png", name: "たぬき", text: "上品ムッシュになって上品マダムと暮らす！" },
         { type: "message1", image: "test.png", name: "上品マダム", text: "「あらぁーこれからよろしくね！上品ム...ってボタンどっちだっけ！？」" },
@@ -974,10 +1013,80 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "？？", text: "ピーピー　ドカッ" },
         { type: "message1", image: "test.png", name: "執事", text: "「末永くお幸せに...」" },
         { type: "message1", image: "test.png", name: "たぬき", text: "なんかこわいんすけど..." },
-        { type: "message1", image: "test.png", name: "たぬき", text: "「え？」" },
-        { type: "message1", image: "test.png", name: "たぬき", text: "「え？」" },
-        { type: "message1", image: "test.png", name: "たぬき", text: "「え？」" },
-
+        { type: "message1", image: "test.png", name: "？？", text: "ビーッ　ボフッ　ピューン　ストン" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "ケホッ　ケホッ　いた...くない！" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "え...？ええ？なんでどうしてまさかおかしくなったのうん絶対そうだよね　うんそうに違いない！" },
+        { type: "message1", image: "test.png", name: "？？", text: "＜＜背後霊に変換完了＞＞" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "え？そうか！幽霊だから実体がない＝イタくない！" },
+        { type: "message1", image: "test.png", name: "？？", text: "＜＜これよりひよこと猫の元へ送ります。＞＞" },
+        { type: "message1", image: "test.png", name: "？？", text: "ヒューン　＜＜転送完了＞＞" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "ありがとー！で、あいつらは..." },
+        { type: "message1", image: "afewmomentslater.jpg", name: "解説", text: "A few moments later", sounds: { 0: "afewmomentslater.mp3" } },
+        { type: "message1", image: "test.png", name: "？？？", text: "「マジそれな～ｗｗ」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "この声は...ねこ！？それにひよこも！ヴヴ！ムカツク！\nでも二人で何か話してる...ちょっと聞いてみようか..." },
+        { type: "message1", image: "test.png", name: "ひよこ", text: "「あいつちょろすぎて草ｗｗ」" },
+        { type: "message1", image: "test.png", name: "猫", text: "「うちが飛びついたらビビッてすんげえ顔だったの見た？」" },
+        { type: "message1", image: "test.png", name: "ひよこ", text: "「見た見たｗマジキモイｗ」" },
+        { type: "message1", image: "test.png", name: "ひよこと猫", text: "「「ギャハハハハハハハ」」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（・・・殺（サツ）！！）その文字で頭がいっぱいになった。" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（ずいぶん性格変わってるな...よし、あいつらの後ろに...）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「ええーい！」" },
+        { type: "message1", image: "test.png", name: "ひよこと猫", text: "「？」「？」" },
+        { type: "message1", image: "test.png", name: "猫", text: "「何か聞こえなかった？」" },
+        { type: "message1", image: "test.png", name: "ひよこ", text: "「空耳っしょ」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "よし、後ろに入れた！そういえば、さっき執事がおきてと注意点を話していたな..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "その１　殺すまではしない\nその２　１回のやり返しに失敗すると正体がばれる" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "その３　他の人には何もしない\nその４　明らかにやりすぎていると判断された場合、正体がばれる" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "その５　これらのおきてを破った場合、適切な判断が下される" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "だった気がする！とにかく殺さないようにしよう...あと失敗する可能性があるのはやらないほうがいいね！" },
+        { type: "choice", image: "test.png", name: "たぬき", text: "最初はどんな仕返しをしよう...ククク\nちょっと危ないのにする？それとも簡単なのにする？", choices: [{ text: "危ないのにする", jump: "doverh" }, { text: "簡単なのにする", jump: "easygo" }] },
+        { label: "doverh" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "よし！危ないのにしよう！危ないのと言ったら精神的なダメージだよね！" },
+        { type: "message1", image: "test.png", name: "猫", text: "「ひよこー！今から『呪いトンネル』にきもだめしにいかない？」" },
+        { type: "message1", image: "test.png", name: "ひよこ", text: "「うん！OK！Let’s　go！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（ナイスタイミングすぎる！）" },
+        { type: "message1", image: "afewhourslater.jpg", name: "解説", text: "A few hours later...", sounds: { 0: "afewhourslater.mp3" } },
+        { type: "message1", image: "test.png", name: "猫", text: "「着いたー！」" },
+        { type: "message1", image: "test.png", name: "ひよこ", text: "「うわぁ～なんか寒気するんですけどー！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（ククク...これからぼくが仕掛けたトリックにはまるはず...）" },
+        { type: "message1", image: "test.png", name: "猫", text: "「このトンネルって何年も行方不明者が出ていて、有名らしいよ！」" },
+        { type: "message1", image: "test.png", name: "ひよこ", text: "「ちょ、やめてよ猫～！怖いんですけど～！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（うわー、さっそくハマったかあ～！本当はココただのトンネルで、ぼくがGoo〇le m〇pに乗せといただけなんだけどなぁ～！「呪いトンネル」って感じで！）" },
+        { type: "message1", image: "test.png", name: "ひよこ", text: "「雰囲気あるなぁ～！呪いトンネルってだけで！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（ひよこバカすぎｗ）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（まあこのトンネル、ちょっと前に封鎖されたけど）" },
+        { type: "message1", image: "test.png", name: "？？？", text: "「呪...って...やる...」" },
+        { type: "message1", image: "test.png", name: "ヒヨコと猫", text: "「え？」「誰？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（ククク...あの顔ウケるー！）" },
+        { type: "message1", image: "test.png", name: "ひよこと猫", text: "「か、かえろう！」「うん！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "（実はこれも仕掛け！ボイスメモに録音してiP〇one置いといただけですｗ）" },
+        { type: "message1", image: "white.png", name: "解説", text: "その後..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "帰った後、ひよこと猫はビビりすぎて神社でお祓いをしたらしい。（そんなに怖かった？）" },
+        { type: "message1", image: "test.png", name: "解説", text: "笑いながら帰っていると、あの執事の声が。" },
+        { type: "message1", image: "test.png", name: "執事", text: "「少しやりすぎたのかもしれませんね。仕掛けたほうは面白くても、仕掛けられたほうは怖いのですよ。」" },
+        { type: "message1", image: "test.png", name: "執事", text: "「恐怖というものは心にダメージが大きいですよね？」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "そ、そうか...「はい...」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "そ、そうか...「はい...」" },
+        { type: "message1", image: "test.png", name: "執事", text: "「これはおきてその４を破ったことになります。えんま大王様に伝えるので、適切な判断が下されます。」" },
+        { type: "choice", image: "test.png", name: "たぬき", text: "どうしよう...逃げるのもあり？いやそれは良くない！でも...", choices: [{ text: "逃げる", jump: "escover" }, { text: "逃げない", jump: "notescape" }] },
+        { label: "escover" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "に、逃げるぞ！" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "ダダダダダダダダダダダダダダダダダダダダダダダダダダダダダダダダダダｄハァハァハァァァ...もう走れないよ..." },
+        { type: "message1", image: "test.png", name: "執事", text: "「逃げるとはよく考えましたね。ふっふっふ　哀れな霊だ...」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "あ、執事！くそ見つかった！剣を持っていい気になってるけど、効果ないからな！" },
+        { type: "message1", image: "test.png", name: "執事", text: "「いえ、ありますよ？これはあなたが手下を１００人倒したときに使った、どんな型にも効果のある剣です。」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "え、や、やばい！" },
+        { type: "message1", image: "test.png", name: "蝓ｷ莠�", text: "霊もうまくはいかないものですよ。では、さようなら。" },
+        { type: "gameover", image: "test.png", name: "？？", text: "ザン", sounds: { 0: "zan.mp3" } },
+        { label: "notescape" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "そ、そうか...「はい...」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "そ、そうか...「はい...」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "そ、そうか...「はい...」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "そ、そうか...「はい...」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "そ、そうか...「はい...」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "そ、そうか...「はい...」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "そ、そうか...「はい...」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "そ、そうか...「はい...」" },
 
     ];
 };
