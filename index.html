@@ -5,6 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>たぬきの運命</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
     <style>
         @font-face {
             font-family: 'PixelMplus';
@@ -38,6 +40,233 @@
             100% {
                 background-position: 0% 50%;
             }
+        }
+
+        body.is-rewinding {
+            animation: rewind 1.5s ease-in-out;
+        }
+
+        body.is-rewinding::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0 1px, transparent 1px 2px);
+            mix-blend-mode: overlay;
+            animation: glitch 0.2s steps(2) 8;
+            z-index: 9999;
+        }
+
+        @keyframes rewind {
+            0% {
+                filter: none;
+                transform: none;
+            }
+
+            20% {
+                filter: invert(0.8) hue-rotate(180deg) blur(1px);
+                transform: scale(1.02) translate(-5px, 2px);
+            }
+
+            50% {
+                filter: blur(4px) contrast(150%) hue-rotate(-90deg);
+                transform: scale(0.98) translate(5px, -3px) rotate(-1deg);
+            }
+
+            80% {
+                filter: invert(0.5) blur(2px);
+                transform: scale(1.01) translate(-2px, -2px);
+            }
+
+            100% {
+                filter: blur(6px) hue-rotate(-180deg);
+                transform: scale(1.05) translate(8px, 4px) rotate(-2deg);
+            }
+        }
+
+        @keyframes glitch {
+            100% {
+                transform: translateY(4px);
+            }
+        }
+
+        /* --- 迷路画面（mazeScreen）用CSS --- */
+        #mazeScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000000;
+            font-family: 'PixelMplus', monospace;
+            user-select: none;
+            z-index: 3000;
+        }
+
+        #maze-ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        .hud-panel {
+            background: #111118;
+            border: 4px solid #ef4444;
+            padding: 12px 18px;
+            color: #f3f4f6;
+            box-shadow: 4px 4px 0px #000000;
+            pointer-events: auto;
+        }
+
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        #maze-instructions {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.98);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #f3f4f6;
+            z-index: 100;
+            cursor: pointer;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .btn-game {
+            background: #dc2626;
+            color: white;
+            border: 4px solid #f87171;
+            padding: 14px 28px;
+            font-size: 0.9rem;
+            font-family: 'PixelMplus', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 4px 4px 0px #000000;
+            transition: transform 0.1s ease;
+            pointer-events: auto;
+        }
+
+        .btn-game:hover {
+            background: #ef4444;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000000;
+        }
+
+        .btn-game:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000000;
+        }
+
+        #maze-message-box {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e1e2f;
+            border: 4px solid #f87171;
+            color: #fff;
+            padding: 12px 20px;
+            font-family: 'PixelMplus', monospace;
+            font-size: 0.75rem;
+            display: none;
+            z-index: 20;
+            box-shadow: 4px 4px 0px #000000;
+            animation: fadeInOut 2.5s ease forwards;
+            text-align: center;
+        }
+
+        #maze-victory-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 20, 0.98);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #f3f4f6;
+            z-index: 200;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #chest-item-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.88);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 180;
+        }
+
+        .loot-card {
+            background: #111118;
+            border: 4px solid #fbbf24;
+            padding: 24px 30px;
+            text-align: center;
+            width: 320px;
+            box-shadow: 8px 8px 0px #000000;
+            position: relative;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.6);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .loot-icon-box {
+            width: 80px;
+            height: 80px;
+            margin: 15px auto;
+            background: #1a1a24;
+            border: 4px solid #f59e0b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
         }
 
         #titleScreen {
@@ -726,6 +955,97 @@
         </div>
     </div>
 
+    <!-- 迷路画面（mazeScreen） -->
+    <div id="mazeScreen" class="screen">
+        <div id="maze-instructions">
+            <div style="max-width: 650px;">
+                <h1
+                    style="color: #f87171; font-size: 1.6rem; margin-bottom: 20px; text-shadow: 4px 4px #000000; line-height: 1.5;">
+                    レトロ・プリズン迷路</h1>
+                <p style="color: #d1d5db; font-size: 0.75rem; line-height: 1.8; margin-bottom: 25px;">
+                    すべての宝箱（3つ）を開けてカギを集め、ゴールを目指せ！<br>
+                    モンスターを倒すとカギが手に入る！
+                </p>
+                <div
+                    style="background: #1a1a24; border: 3px dashed #4b5563; padding: 15px; margin-bottom: 25px; text-align: left; display: inline-block; font-size: 0.65rem; line-height: 1.6; color: #9ca3af;">
+                    <b style="color: #fca5a5;">操作方法：</b><br>
+                    • <b>W, A, S, D</b> / <b>矢印キー</b>: 移動<br>
+                    • <b>マウス</b>: 視点移動 (画面クリックでロック)<br>
+                    • <b>左クリック</b>: 宝箱を開ける / 武器で攻撃<br>
+                    • <b>E キー</b>: 天井の電気スイッチON/OFF<br>
+                    • <b>ESC</b>: ポーズ解除
+                </div>
+                <br>
+                <button class="btn-game" id="maze-start-btn">ゲームスタート</button>
+            </div>
+        </div>
+
+        <div id="maze-victory-screen">
+            <h1 style="color: #34d399; font-size: 1.8rem; margin-bottom: 20px; text-shadow: 4px 4px #000000;">★
+                祝・ゲームクリア！ ★</h1>
+            <p style="font-size: 0.8rem; color: #e5e7eb; margin-bottom: 25px; line-height: 1.6;">
+                すべての宝箱を開け、無事に牢獄から脱出成功しました！</p>
+            <button class="btn-game" id="maze-clear-btn">進む</button>
+        </div>
+
+        <div id="crosshair"></div>
+
+        <div id="maze-ui-overlay">
+            <div style="display: flex; justify-content: space-between; width: 100%;">
+                <div class="hud-panel">
+                    <div style="font-size: 0.6rem; color: #9ca3af; margin-bottom: 4px;">STATUS</div>
+                    <div style="font-size: 0.75rem; color: #f87171; margin-bottom: 4px;">残機: <span
+                            id="lives-val">3</span></div>
+                    <div style="font-size: 0.75rem; color: #f87171;">HP: <span id="hp-val">5</span>/5</div>
+                    <div style="font-size: 0.6rem; color: #fde047; margin-top: 4px;">カギ: <span id="keys-count">0</span>本
+                    </div>
+                </div>
+                <div class="hud-panel">
+                    <div style="font-size: 0.6rem; color: #9ca3af; margin-bottom: 4px;">PROGRESS</div>
+                    <div style="font-size: 0.75rem; color: #fbbf24; margin-bottom: 4px;">宝箱: <span
+                            id="score-val">0</span>/3</div>
+                    <div style="font-size: 0.6rem; color: #93c5fd;">電気: <span id="light-status">ON</span> (E)</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="chest-modal"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 150;">
+            <div
+                style="background: #111118; border: 4px solid #fbbf24; padding: 25px; text-align: center; max-width: 420px; color: #f3f4f6; box-shadow: 6px 6px 0px #000000;">
+                <h2 style="color: #fbbf24; margin-top: 0; font-size: 1rem; line-height: 1.5;">宝箱を発見した！</h2>
+                <p id="chest-modal-desc"
+                    style="color: #d1d5db; font-size: 0.65rem; line-height: 1.6; margin-bottom: 25px;">
+                    カギを1つ消費して開けますか？<br>(所持カギ: <span id="modal-keys">0</span>本)</p>
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <button class="btn-game" id="open-chest-btn"
+                        style="margin-top: 0; background: #d97706; border-color: #fbbf24; font-size: 0.7rem;">あける</button>
+                    <button class="btn-game" id="close-chest-btn"
+                        style="margin-top: 0; background: #4b5563; border-color: #9ca3af; font-size: 0.7rem;">やめる</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="chest-item-modal">
+            <div class="loot-card">
+                <div style="font-size: 0.6rem; color: #fbbf24; letter-spacing: 2px;">★ ITEM GET! ★</div>
+                <div class="loot-icon-box">
+                    <canvas id="loot-canvas" width="64" height="64" style="width: 64px; height: 64px;"></canvas>
+                </div>
+                <div id="loot-name" style="font-size: 0.8rem; color: #ffffff; margin-bottom: 8px; line-height: 1.4;">
+                    アイテム名</div>
+                <div id="loot-detail" style="font-size: 0.6rem; color: #9ca3af; margin-bottom: 20px; line-height: 1.5;">
+                    詳細メッセージ</div>
+                <button class="btn-game" id="claim-loot-btn"
+                    style="margin-top: 0; width: 100%; font-size: 0.75rem; background: #d97706; border-color: #fbbf24;">入手する</button>
+            </div>
+        </div>
+
+        <canvas id="minimap" width="160" height="120"
+            style="position: absolute; bottom: 24px; right: 24px; background: #111118; border: 4px solid #fbbf24; box-shadow: 4px 4px 0px #000000; pointer-events: none; z-index: 15;"></canvas>
+        <div id="maze-message-box">宝箱を開けた！</div>
+    </div>
+
     <script src="story.js"></script>
     <script>
         const scenario = getScenario();
@@ -746,6 +1066,13 @@
         let flags = {};
         const bgmList = {};
 
+        function triggerRewind() {
+            document.body.classList.remove('is-rewinding');
+            requestAnimationFrame(() => {
+                document.body.classList.add('is-rewinding');
+            });
+        }
+
         const nameBox = document.getElementById("nameBox");
         const dialogText = document.getElementById("dialogText");
         const choicesContainer = document.getElementById("choices");
@@ -755,6 +1082,746 @@
         const battleNameBox = document.getElementById("battleNameBox");
         const battleNextMark = document.getElementById("battleNextMark");
         const battleChoicesContainer = document.getElementById("battleChoices");
+
+        class DungeonEngine {
+            constructor() {
+                this.tileSize = 4;
+                this.wallHeight = 4;
+                this.walls = [];
+                this.chests = [];
+                this.enemies = [];
+                this.dungeonLights = [];
+                this.isLightOn = true;
+                this.isInitialized = false;
+
+                this.lives = 3;
+                this.hp = 5;
+                this.maxHp = 5;
+                this.score = 0;
+                this.keysCount = 0;
+                this.totalChestsCount = 3;
+                this.currentWeapon = { name: "素手 (猫の手)", power: 1, iconType: 'hand' };
+                this.isGameCleared = false;
+                this.activeChest = null;
+                this.pendingLootEffect = null;
+                this.goalPosition = null;
+                this.animationFrameId = null;
+            }
+
+            init() {
+                if (this.isInitialized) return;
+                this.initUIElements();
+                this.initThreeJS();
+                this.initControls();
+                this.isInitialized = true;
+            }
+
+            initUIElements() {
+                this.livesValEl = document.getElementById('lives-val');
+                this.hpValEl = document.getElementById('hp-val');
+                this.scoreValEl = document.getElementById('score-val');
+                this.keysCountEl = document.getElementById('keys-count');
+                this.messageBox = document.getElementById('maze-message-box');
+                this.chestModal = document.getElementById('chest-modal');
+                this.modalKeysEl = document.getElementById('modal-keys');
+                this.minimapCanvas = document.getElementById('minimap');
+                this.minimapCtx = this.minimapCanvas.getContext('2d');
+                this.minimapCtx.imageSmoothingEnabled = false;
+            }
+
+            initThreeJS() {
+                this.scene = new THREE.Scene();
+                this.scene.background = new THREE.Color(0x0c0c14);
+                this.scene.fog = new THREE.FogExp2(0x0c0c14, 0.05);
+
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+                this.renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setPixelRatio(0.6);
+                document.getElementById('mazeScreen').appendChild(this.renderer.domElement);
+
+                this.ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+                this.scene.add(this.ambientLight);
+
+                this.playerLight = new THREE.PointLight(0xffedd5, 1.8, 12);
+                this.playerLight.position.set(0, 0, 0);
+                this.camera.add(this.playerLight);
+                this.scene.add(this.camera);
+
+                this.weaponGroup = new THREE.Group();
+                this.camera.add(this.weaponGroup);
+                this.weaponGroup.position.set(0.65, -0.55, -1.0);
+
+                this.updateViewmodel('hand');
+            }
+
+            initControls() {
+                this.controls = new THREE.PointerLockControls(this.camera, document.body);
+                this.moveState = { forward: false, backward: false, left: false, right: false };
+
+                document.getElementById('maze-start-btn').addEventListener('click', () => {
+                    try { this.controls.lock(); } catch (e) { console.warn(e); }
+                });
+
+                const instructions = document.getElementById('maze-instructions');
+                this.controls.addEventListener('lock', () => instructions.style.display = 'none');
+                this.controls.addEventListener('unlock', () => {
+                    if (!this.isGameCleared && document.getElementById('mazeScreen').style.display === 'block') {
+                        instructions.style.display = 'flex';
+                    }
+                });
+
+                window.addEventListener('keydown', (e) => this.handleKeyDown(e));
+                window.addEventListener('keyup', (e) => this.handleKeyUp(e));
+                window.addEventListener('mousedown', () => this.handleMouseDown());
+                window.addEventListener('resize', () => this.handleResize());
+
+                document.getElementById('claim-loot-btn').addEventListener('click', () => this.claimLoot());
+                document.getElementById('open-chest-btn').addEventListener('click', () => this.triggerOpenChest());
+                document.getElementById('close-chest-btn').addEventListener('click', () => {
+                    this.chestModal.style.display = 'none';
+                    try { this.controls.lock(); } catch (e) { console.warn(e); }
+                    this.activeChest = null;
+                });
+
+                document.getElementById('maze-clear-btn').addEventListener('click', () => {
+                    this.stop();
+                    currentIndex++;
+                    saveCurrentProgress();
+                    nextEvent();
+                });
+            }
+
+            updateViewmodel(iconType) {
+                while (this.weaponGroup.children.length > 0) {
+                    this.weaponGroup.remove(this.weaponGroup.children[0]);
+                }
+
+                const hMat = new THREE.MeshLambertMaterial({ color: 0x78350f });
+                const mMat = new THREE.MeshLambertMaterial({ color: 0x4b5563 });
+                const meshGroup = new THREE.Group();
+
+                if (iconType === 'hand') {
+                    const pawMat = new THREE.MeshLambertMaterial({ color: 0xf472b6 });
+                    const handBase = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.35, 0.35), pawMat);
+                    meshGroup.add(handBase);
+                } else if (iconType === 'sword') {
+                    const blade = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.2, 0.06), new THREE.MeshLambertMaterial({ color: 0xe0f2fe }));
+                    blade.position.set(0, 0.5, 0);
+                    const guard = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.1, 0.15), new THREE.MeshLambertMaterial({ color: 0xd97706 }));
+                    guard.position.set(0, -0.1, 0);
+                    const handle = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.4, 0.1), hMat);
+                    handle.position.set(0, -0.35, 0);
+                    meshGroup.add(blade, guard, handle);
+                    meshGroup.rotation.z = -Math.PI / 6;
+                    meshGroup.rotation.x = Math.PI / 12;
+                } else if (iconType === 'hammer') {
+                    const handle = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.0, 0.12), hMat);
+                    const head = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.35, 0.35), mMat);
+                    head.position.set(0, 0.5, 0);
+                    meshGroup.add(handle, head);
+                    meshGroup.rotation.z = -Math.PI / 8;
+                } else if (iconType === 'pique') {
+                    const handle = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.0, 0.12), new THREE.MeshLambertMaterial({ color: 0xdc2626 }));
+                    const head = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.4, 0.4), new THREE.MeshLambertMaterial({ color: 0xfbbf24 }));
+                    head.position.set(0, 0.5, 0);
+                    meshGroup.add(handle, head);
+                    meshGroup.rotation.z = -Math.PI / 8;
+                }
+
+                meshGroup.scale.set(0.75, 0.75, 0.75);
+                this.weaponGroup.add(meshGroup);
+            }
+
+            createPixelStoneTexture(baseColorHex, noiseColorHex) {
+                const canvas = document.createElement('canvas');
+                canvas.width = 64; canvas.height = 64;
+                const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingEnabled = false;
+                ctx.fillStyle = baseColorHex; ctx.fillRect(0, 0, 64, 64);
+                ctx.strokeStyle = noiseColorHex; ctx.lineWidth = 2;
+
+                for (let y = 0; y <= 64; y += 16) {
+                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(64, y); ctx.stroke();
+                }
+                for (let x = 0; x <= 64; x += 16) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 64); ctx.stroke();
+                }
+
+                for (let i = 0; i < 200; i++) {
+                    const rx = Math.floor(Math.random() * 32) * 2;
+                    const ry = Math.floor(Math.random() * 32) * 2;
+                    ctx.fillStyle = Math.random() > 0.5 ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.2)';
+                    ctx.fillRect(rx, ry, 2, 2);
+                }
+
+                const texture = new THREE.CanvasTexture(canvas);
+                texture.magFilter = THREE.NearestFilter;
+                texture.minFilter = THREE.NearestFilter;
+                texture.wrapS = THREE.RepeatWrapping;
+                texture.wrapT = THREE.RepeatWrapping;
+                return texture;
+            }
+
+            buildMap(mapData) {
+                const stoneTex = this.createPixelStoneTexture('#373742', '#1a1a22');
+                stoneTex.repeat.set(2, 2);
+                const floorTex = this.createPixelStoneTexture('#272730', '#121218');
+                floorTex.repeat.set(12, 12);
+
+                const floorGeo = new THREE.PlaneGeometry(mapData[0].length * this.tileSize, mapData.length * this.tileSize);
+                const floor = new THREE.Mesh(floorGeo, new THREE.MeshLambertMaterial({ map: floorTex }));
+                floor.rotation.x = -Math.PI / 2;
+                floor.position.set((mapData[0].length * this.tileSize) / 2 - this.tileSize / 2, 0, (mapData.length * this.tileSize) / 2 - this.tileSize / 2);
+                this.scene.add(floor);
+
+                const ceiling = new THREE.Mesh(floorGeo, new THREE.MeshLambertMaterial({ color: 0x1a1a22 }));
+                ceiling.rotation.x = Math.PI / 2;
+                ceiling.position.set((mapData[0].length * this.tileSize) / 2 - this.tileSize / 2, this.wallHeight, (mapData.length * this.tileSize) / 2 - this.tileSize / 2);
+                this.scene.add(ceiling);
+
+                const stoneWallGeo = new THREE.BoxGeometry(this.tileSize, this.wallHeight, this.tileSize);
+                const stoneWallMat = new THREE.MeshLambertMaterial({ map: stoneTex });
+
+                for (let z = 0; z < mapData.length; z++) {
+                    for (let x = 0; x < mapData[z].length; x++) {
+                        const type = mapData[z][x];
+                        const posX = x * this.tileSize;
+                        const posZ = z * this.tileSize;
+
+                        if (type === 1) {
+                            const wall = new THREE.Mesh(stoneWallGeo, stoneWallMat);
+                            wall.position.set(posX, this.wallHeight / 2, posZ);
+                            this.scene.add(wall);
+                            this.walls.push({ mesh: wall, x: posX, z: posZ, size: this.tileSize });
+
+                            if (Math.random() < 0.3) {
+                                const dLight = new THREE.PointLight(0xffb703, 2.0, 7);
+                                dLight.position.set(posX, this.wallHeight * 0.65, posZ);
+                                this.scene.add(dLight);
+                                this.dungeonLights.push(dLight);
+                                this.addPrisonDecorations(posX, posZ);
+                            }
+                        } else if (type === 2) {
+                            const ironGroup = this.createIronBarWall();
+                            ironGroup.position.set(posX, 0, posZ);
+                            this.scene.add(ironGroup);
+                            this.walls.push({ mesh: ironGroup, x: posX, z: posZ, size: this.tileSize });
+                        } else if (type === 3) {
+                            this.goalPosition = new THREE.Vector3(posX, 0, posZ);
+                            const goalMesh = new THREE.Mesh(
+                                new THREE.BoxGeometry(this.tileSize * 0.8, this.wallHeight * 0.9, 0.5),
+                                new THREE.MeshLambertMaterial({ color: 0xfbbf24, emissive: 0xd97706 })
+                            );
+                            goalMesh.position.set(posX, this.wallHeight / 2, posZ);
+                            this.scene.add(goalMesh);
+
+                            const gLight = new THREE.PointLight(0xfbbf24, 3.0, 8);
+                            gLight.position.set(posX, this.wallHeight / 2, posZ);
+                            this.scene.add(gLight);
+                        }
+                    }
+                }
+            }
+
+            createIronBarWall() {
+                const group = new THREE.Group();
+                const ironBarMat = new THREE.MeshLambertMaterial({ color: 0x6b7280 });
+                const barGeo = new THREE.CylinderGeometry(0.08, 0.08, this.wallHeight, 4);
+                for (let i = -1.5; i <= 1.5; i += 0.8) {
+                    const bar = new THREE.Mesh(barGeo, ironBarMat);
+                    bar.position.set(i, this.wallHeight / 2, 0);
+                    group.add(bar);
+                }
+                const crossGeo = new THREE.BoxGeometry(this.tileSize, 0.15, 0.15);
+                const cross1 = new THREE.Mesh(crossGeo, ironBarMat);
+                cross1.position.set(0, this.wallHeight * 0.25, 0);
+                const cross2 = new THREE.Mesh(crossGeo, ironBarMat);
+                cross2.position.set(0, this.wallHeight * 0.75, 0);
+                group.add(cross1, cross2);
+                return group;
+            }
+
+            addPrisonDecorations(x, z) {
+                const decorGroup = new THREE.Group();
+                const chainMat = new THREE.MeshLambertMaterial({ color: 0x4b5563 });
+                for (let i = 0; i < 2; i++) {
+                    const chain = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.5, 3), chainMat);
+                    chain.position.set((Math.random() - 0.5) * 2, this.wallHeight - 0.75, (Math.random() - 0.5) * 2);
+                    decorGroup.add(chain);
+                }
+                decorGroup.position.set(x, 0, z);
+                this.scene.add(decorGroup);
+            }
+
+            addChests(positions) {
+                const chestGroupGeo = new THREE.BoxGeometry(1.0, 0.8, 0.8);
+                const chestMat = new THREE.MeshLambertMaterial({ color: 0x78350f });
+                const lockMat = new THREE.MeshLambertMaterial({ color: 0xfbbf24 });
+
+                positions.forEach(pos => {
+                    const chestGroup = new THREE.Group();
+                    const box = new THREE.Mesh(chestGroupGeo, chestMat);
+                    box.position.y = 0.4;
+                    chestGroup.add(box);
+                    const lock = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.2), lockMat);
+                    lock.position.set(0, 0.4, 0.4);
+                    chestGroup.add(lock);
+
+                    chestGroup.position.set(pos.x * this.tileSize, 0, pos.z * this.tileSize);
+                    this.scene.add(chestGroup);
+                    this.chests.push({ group: chestGroup, collected: false });
+                });
+            }
+
+            addEnemies(enemyData) {
+                enemyData.forEach(pos => {
+                    const enemyGroup = new THREE.Group();
+                    const bodyColor = pos.isRareSword ? 0xd97706 : 0xef4444;
+                    const bodyMat = new THREE.MeshLambertMaterial({ color: bodyColor, emissive: 0x450a0a });
+                    const body = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.9, 0.9), bodyMat);
+                    body.position.y = 0.6;
+                    enemyGroup.add(body);
+
+                    const eyeMat = new THREE.MeshBasicMaterial({ color: 0xfef08a });
+                    const eye1 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), eyeMat);
+                    eye1.position.set(-0.2, 0.7, 0.46);
+                    const eye2 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), eyeMat);
+                    eye2.position.set(0.2, 0.7, 0.46);
+                    enemyGroup.add(eye1, eye2);
+
+                    if (pos.isRareSword) {
+                        const swordMat = new THREE.MeshLambertMaterial({ color: 0x93c5fd });
+                        const swordMesh = new THREE.Mesh(new THREE.BoxGeometry(0.15, 1.0, 0.1), swordMat);
+                        swordMesh.position.set(0.6, 0.6, 0.3);
+                        swordMesh.rotation.z = -Math.PI / 6;
+                        enemyGroup.add(swordMesh);
+                    }
+
+                    const eLight = new THREE.PointLight(bodyColor, 1.2, 4);
+                    eLight.position.set(0, 0.6, 0);
+                    enemyGroup.add(eLight);
+
+                    enemyGroup.position.set(pos.x * this.tileSize, 0, pos.z * this.tileSize);
+                    this.scene.add(enemyGroup);
+
+                    this.enemies.push({
+                        group: enemyGroup,
+                        originX: pos.x * this.tileSize,
+                        originZ: pos.z * this.tileSize,
+                        hp: pos.isRareSword ? 8 : 4,
+                        maxHp: pos.isRareSword ? 8 : 4,
+                        attackPower: pos.isRareSword ? 3 : 1,
+                        speed: 0.035,
+                        detectRange: 7.0,
+                        attackCooldown: 0,
+                        isRare: pos.isRareSword
+                    });
+                });
+            }
+
+            handleKeyDown(e) {
+                if (document.getElementById('mazeScreen').style.display !== 'block') return;
+                if (e.code === 'KeyW' || e.code === 'ArrowUp') this.moveState.forward = true;
+                if (e.code === 'KeyS' || e.code === 'ArrowDown') this.moveState.backward = true;
+                if (e.code === 'KeyA' || e.code === 'ArrowLeft') this.moveState.left = true;
+                if (e.code === 'KeyD' || e.code === 'ArrowRight') this.moveState.right = true;
+                if (e.code === 'KeyE') this.toggleDungeonLights();
+            }
+
+            handleKeyUp(e) {
+                if (document.getElementById('mazeScreen').style.display !== 'block') return;
+                if (e.code === 'KeyW' || e.code === 'ArrowUp') this.moveState.forward = false;
+                if (e.code === 'KeyS' || e.code === 'ArrowDown') this.moveState.backward = false;
+                if (e.code === 'KeyA' || e.code === 'ArrowLeft') this.moveState.left = false;
+                if (e.code === 'KeyD' || e.code === 'ArrowRight') this.moveState.right = false;
+            }
+
+            handleMouseDown() {
+                if (document.getElementById('mazeScreen').style.display !== 'block') return;
+                if (!this.controls.isLocked || this.isGameCleared) return;
+
+                let clickedChest = false;
+                this.chests.forEach(chest => {
+                    if (!chest.collected && this.camera.position.distanceTo(chest.group.position) < 3.2) {
+                        const dir = new THREE.Vector3();
+                        this.camera.getWorldDirection(dir);
+                        const toChest = new THREE.Vector3().subVectors(chest.group.position, this.camera.position).normalize();
+                        if (dir.dot(toChest) > 0.7) {
+                            this.activeChest = chest;
+                            this.modalKeysEl.innerText = this.keysCount;
+                            this.chestModal.style.display = 'flex';
+                            this.controls.unlock();
+                            clickedChest = true;
+                        }
+                    }
+                });
+
+                if (clickedChest) return;
+
+                this.enemies.forEach(enemy => {
+                    if (enemy.hp > 0 && this.camera.position.distanceTo(enemy.group.position) < 3.8) {
+                        enemy.hp -= this.currentWeapon.power;
+                        const rareTag = enemy.isRare ? "【レア敵】" : "";
+                        this.showMessage(`${this.currentWeapon.name}で攻撃！${rareTag}に ${this.currentWeapon.power} ダメージ！`);
+
+                        if (enemy.hp <= 0) {
+                            enemy.group.position.y = -100;
+                            this.keysCount++;
+                            this.keysCountEl.innerText = this.keysCount;
+                            this.showMessage("モンスターを倒し、宝箱のカギを手に入れた！ 🗝️");
+                        }
+                    }
+                });
+            }
+
+            handleResize() {
+                if (!this.renderer) return;
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            toggleDungeonLights() {
+                this.isLightOn = !this.isLightOn;
+                const statusEl = document.getElementById('light-status');
+                statusEl.innerText = this.isLightOn ? "ON" : "OFF";
+                statusEl.style.color = this.isLightOn ? "#93c5fd" : "#f87171";
+                this.dungeonLights.forEach(light => {
+                    light.intensity = this.isLightOn ? 2.2 : 0.0;
+                });
+            }
+
+            showMessage(text) {
+                this.messageBox.innerText = text;
+                this.messageBox.style.display = 'block';
+                this.messageBox.style.animation = 'none';
+                this.messageBox.offsetHeight;
+                this.messageBox.style.animation = 'fadeInOut 2.5s ease forwards';
+            }
+
+            respawnPlayer() {
+                this.camera.position.set(1 * this.tileSize, this.wallHeight / 2, 1 * this.tileSize);
+            }
+
+            drawLootIcon(type) {
+                const cvs = document.getElementById('loot-canvas');
+                const ctx = cvs.getContext('2d');
+                ctx.clearRect(0, 0, 64, 64);
+                ctx.imageSmoothingEnabled = false;
+
+                if (type === 'heart') {
+                    ctx.fillStyle = '#ef4444';
+                    ctx.fillRect(12, 16, 16, 16); ctx.fillRect(36, 16, 16, 16);
+                    ctx.fillRect(8, 24, 48, 16); ctx.fillRect(16, 40, 32, 12); ctx.fillRect(24, 52, 16, 8);
+                } else if (type === 'potion') {
+                    ctx.fillStyle = '#60a5fa';
+                    ctx.fillRect(24, 12, 16, 8); ctx.fillRect(20, 20, 24, 8); ctx.fillRect(16, 28, 32, 28);
+                    ctx.fillStyle = '#ffffff'; ctx.fillRect(24, 32, 8, 8);
+                } else if (type === 'sword') {
+                    ctx.fillStyle = '#e0f2fe'; ctx.fillRect(28, 8, 8, 36);
+                    ctx.fillStyle = '#fbbf24'; ctx.fillRect(16, 44, 32, 6);
+                    ctx.fillStyle = '#78350f'; ctx.fillRect(28, 50, 8, 10);
+                } else if (type === 'pique') {
+                    ctx.fillStyle = '#f59e0b'; ctx.fillRect(12, 12, 40, 20);
+                    ctx.fillStyle = '#ef4444'; ctx.fillRect(28, 32, 8, 28);
+                } else if (type === 'hammer') {
+                    ctx.fillStyle = '#6b7280'; ctx.fillRect(12, 12, 40, 24);
+                    ctx.fillStyle = '#78350f'; ctx.fillRect(28, 36, 8, 24);
+                }
+            }
+
+            triggerOpenChest() {
+                if (!this.activeChest) return;
+                if (this.keysCount <= 0) {
+                    this.showMessage("カギが足りません！モンスターを倒して手に入れよう。");
+                    return;
+                }
+
+                this.keysCount--;
+                this.keysCountEl.innerText = this.keysCount;
+                this.chestModal.style.display = 'none';
+
+                this.activeChest.collected = true;
+                this.activeChest.group.position.y = -100;
+                this.score++;
+                this.scoreValEl.innerText = this.score;
+
+                const rand = Math.random();
+                let reward;
+
+                if (rand < 0.25) {
+                    reward = { name: '残機回復ハート', desc: '残機が1増加した！', iconType: 'heart', effect: () => { this.lives++; this.livesValEl.innerText = this.lives; } };
+                } else if (rand < 0.45) {
+                    reward = { name: 'HP回復ポーション', desc: 'HPが2回復した！', iconType: 'potion', effect: () => { this.hp = Math.min(this.maxHp, this.hp + 2); this.hpValEl.innerText = this.hp; } };
+                } else if (rand < 0.60) {
+                    reward = { name: '大回復ポーション', desc: 'HPが3回復した！', iconType: 'potion', effect: () => { this.hp = Math.min(this.maxHp, this.hp + 3); this.hpValEl.innerText = this.hp; } };
+                } else if (rand < 0.80) {
+                    reward = { name: 'ピコピコハンマー', desc: '攻撃力: 1.5', iconType: 'pique', weapon: { name: 'ピコピコハンマー', power: 1.5, iconType: 'pique' } };
+                } else if (rand < 0.95) {
+                    reward = { name: '鋼鉄の剣', desc: '攻撃力: 3.0', iconType: 'sword', weapon: { name: '剣', power: 3, iconType: 'sword' } };
+                } else {
+                    reward = { name: '【レア】鉄ハンマー', desc: '攻撃力: 6.0 (超強力!)', iconType: 'hammer', weapon: { name: 'ハンマー', power: 6, iconType: 'hammer' } };
+                }
+
+                this.drawLootIcon(reward.iconType);
+                document.getElementById('loot-name').innerText = reward.name;
+                document.getElementById('loot-detail').innerText = reward.desc;
+                document.getElementById('chest-item-modal').style.display = 'flex';
+
+                this.pendingLootEffect = () => {
+                    if (reward.effect) reward.effect();
+                    if (reward.weapon) {
+                        this.currentWeapon = reward.weapon;
+                        this.updateViewmodel(this.currentWeapon.iconType);
+                    }
+                };
+                this.activeChest = null;
+            }
+
+            claimLoot() {
+                if (this.pendingLootEffect) this.pendingLootEffect();
+                document.getElementById('chest-item-modal').style.display = 'none';
+                try { this.controls.lock(); } catch (e) { console.warn(e); }
+            }
+
+            checkCollision(position) {
+                const playerRadius = 0.35;
+                for (let wall of this.walls) {
+                    const dx = Math.abs(position.x - wall.x);
+                    const dz = Math.abs(position.z - wall.z);
+                    if (dx < (wall.size / 2 + playerRadius) && dz < (wall.size / 2 + playerRadius)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            drawMinimap() {
+                this.minimapCtx.clearRect(0, 0, this.minimapCanvas.width, this.minimapCanvas.height);
+                const radius = 16;
+                const canvasW = this.minimapCanvas.width;
+                const canvasH = this.minimapCanvas.height;
+                const scale = canvasW / (radius * 2);
+
+                this.minimapCtx.save();
+                this.minimapCtx.translate(canvasW / 2, canvasH / 2);
+
+                const dir = new THREE.Vector3();
+                this.camera.getWorldDirection(dir);
+                this.minimapCtx.rotate(-Math.atan2(dir.x, dir.z));
+
+                const px = this.camera.position.x;
+                const pz = this.camera.position.z;
+
+                this.walls.forEach(wall => {
+                    const dx = wall.x - px;
+                    const dz = wall.z - pz;
+                    if (Math.abs(dx) < radius && Math.abs(dz) < radius) {
+                        this.minimapCtx.fillStyle = '#4b5563';
+                        const wSize = wall.size || this.tileSize;
+                        this.minimapCtx.fillRect(
+                            Math.floor((dx - wSize / 2) * scale),
+                            Math.floor((dz - wSize / 2) * scale),
+                            Math.ceil(wSize * scale),
+                            Math.ceil(wSize * scale)
+                        );
+                    }
+                });
+
+                this.chests.forEach(chest => {
+                    if (!chest.collected) {
+                        const dx = chest.group.position.x - px;
+                        const dz = chest.group.position.z - pz;
+                        if (Math.abs(dx) < radius && Math.abs(dz) < radius) {
+                            this.minimapCtx.fillStyle = '#fbbf24';
+                            this.minimapCtx.fillRect(Math.floor(dx * scale - 2), Math.floor(dz * scale - 2), 4, 4);
+                        }
+                    }
+                });
+
+                this.enemies.forEach(enemy => {
+                    if (enemy.hp > 0) {
+                        const dx = enemy.group.position.x - px;
+                        const dz = enemy.group.position.z - pz;
+                        if (Math.abs(dx) < radius && Math.abs(dz) < radius) {
+                            this.minimapCtx.fillStyle = enemy.isRare ? '#3b82f6' : '#ef4444';
+                            this.minimapCtx.fillRect(Math.floor(dx * scale - 2), Math.floor(dz * scale - 2), 4, 4);
+                        }
+                    }
+                });
+
+                this.minimapCtx.restore();
+                this.minimapCtx.fillStyle = '#22c55e';
+                this.minimapCtx.fillRect(canvasW / 2 - 2, canvasH / 2 - 2, 4, 4);
+                this.minimapCtx.strokeStyle = '#fbbf24';
+                this.minimapCtx.lineWidth = 4;
+                this.minimapCtx.strokeRect(0, 0, canvasW, canvasH);
+            }
+
+            update(delta) {
+                if (this.isGameCleared) return;
+                const moveSpeed = 4.5 * delta;
+
+                if (this.controls.isLocked) {
+                    const oldPosition = this.camera.position.clone();
+
+                    if (this.moveState.forward) this.controls.moveForward(moveSpeed);
+                    if (this.moveState.backward) this.controls.moveForward(-moveSpeed);
+                    if (this.moveState.left) this.controls.moveRight(-moveSpeed);
+                    if (this.moveState.right) this.controls.moveRight(moveSpeed);
+
+                    if (this.checkCollision(this.camera.position)) {
+                        this.camera.position.copy(oldPosition);
+                    }
+
+                    if (this.goalPosition && this.camera.position.distanceTo(this.goalPosition) < 3.0) {
+                        if (this.score < this.totalChestsCount) {
+                            this.showMessage(`すべての宝箱（${this.score}/${this.totalChestsCount}）を開けないとゴールできません！`);
+                            this.camera.position.copy(oldPosition);
+                        } else {
+                            this.isGameCleared = true;
+                            this.controls.unlock();
+                            document.getElementById('maze-victory-screen').style.display = 'flex';
+                            return;
+                        }
+                    }
+
+                    this.enemies.forEach(enemy => {
+                        if (enemy.hp > 0) {
+                            const distToPlayer = enemy.group.position.distanceTo(this.camera.position);
+
+                            if (enemy.attackCooldown > 0) enemy.attackCooldown--;
+
+                            if (distToPlayer < enemy.detectRange) {
+                                const dir = new THREE.Vector3().subVectors(this.camera.position, enemy.group.position);
+                                dir.y = 0;
+                                dir.normalize();
+
+                                const nextX = enemy.group.position.x + dir.x * enemy.speed;
+                                const nextZ = enemy.group.position.z + dir.z * enemy.speed;
+
+                                let canMoveX = true;
+                                let canMoveZ = true;
+                                for (let wall of this.walls) {
+                                    if (Math.abs(nextX - wall.x) < (wall.size / 2 + 0.4) && Math.abs(enemy.group.position.z - wall.z) < (wall.size / 2 + 0.4)) canMoveX = false;
+                                    if (Math.abs(enemy.group.position.x - wall.x) < (wall.size / 2 + 0.4) && Math.abs(nextZ - wall.z) < (wall.size / 2 + 0.4)) canMoveZ = false;
+                                }
+
+                                if (canMoveX) enemy.group.position.x = nextX;
+                                if (canMoveZ) enemy.group.position.z = nextZ;
+                            }
+
+                            if (distToPlayer < 1.6) {
+                                if (!enemy.attackCooldown || enemy.attackCooldown <= 0) {
+                                    this.hp -= enemy.attackPower;
+                                    if (this.hp < 0) this.hp = 0;
+                                    this.hpValEl.innerText = this.hp;
+
+                                    const rareText = enemy.isRare ? "（強攻撃！）" : "";
+                                    this.showMessage(`ダメージ！ -${enemy.attackPower} HP ${rareText}`);
+
+                                    enemy.attackCooldown = 45;
+
+                                    if (this.hp <= 0) {
+                                        this.lives--;
+                                        this.livesValEl.innerText = this.lives;
+                                        if (this.lives > 0) {
+                                            this.showMessage("HPが0になった！スタート地点に復活");
+                                            this.hp = this.maxHp;
+                                            this.hpValEl.innerText = this.hp;
+                                            this.respawnPlayer();
+                                        } else {
+                                            this.showMessage("ゲームオーバー！");
+                                            setTimeout(() => {
+                                                this.stop();
+                                                showGameOver();
+                                            }, 2000);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            render() {
+                if (!this.renderer) return;
+                this.renderer.render(this.scene, this.camera);
+                this.drawMinimap();
+            }
+
+            start() {
+                this.init();
+                this.isGameCleared = false;
+                document.getElementById('maze-instructions').style.display = 'flex';
+                document.getElementById('maze-victory-screen').style.display = 'none';
+
+                this.walls = [];
+                this.chests = [];
+                this.enemies = [];
+                this.dungeonLights = [];
+                while (this.scene.children.length > 0) {
+                    this.scene.remove(this.scene.children[0]);
+                }
+
+                this.ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+                this.scene.add(this.ambientLight);
+                this.playerLight = new THREE.PointLight(0xffedd5, 1.8, 12);
+                this.camera.add(this.playerLight);
+                this.scene.add(this.camera);
+
+                const defaultMap = [
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [1, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 1],
+                    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+                    [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+                    [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1],
+                    [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+                    [1, 1, 2, 0, 1, 1, 1, 0, 1, 1, 1, 0, 2, 1, 1, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 3, 1],
+                    [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+                    [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1],
+                    [1, 1, 1, 0, 1, 2, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1],
+                    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                ];
+                const treasurePositions = [{ x: 1, z: 11 }, { x: 15, z: 1 }, { x: 15, z: 9 }];
+                const enemyPositions = [
+                    { x: 5, z: 3, isRareSword: false },
+                    { x: 11, z: 7, isRareSword: true },
+                    { x: 3, z: 9, isRareSword: false },
+                    { x: 13, z: 3, isRareSword: true }
+                ];
+
+                this.buildMap(defaultMap);
+                this.addChests(treasurePositions);
+                this.addEnemies(enemyPositions);
+                this.respawnPlayer();
+
+                this.clock = new THREE.Clock();
+                const loop = () => {
+                    this.animationFrameId = requestAnimationFrame(loop);
+                    const delta = this.clock.getDelta();
+                    this.update(delta);
+                    this.render();
+                };
+                loop();
+            }
+
+            stop() {
+                if (this.animationFrameId) {
+                    cancelAnimationFrame(this.animationFrameId);
+                    this.animationFrameId = null;
+                }
+                if (this.controls && this.controls.isLocked) {
+                    this.controls.unlock();
+                }
+            }
+        }
+        const mazeGame = new DungeonEngine();
 
         let currentSegments = [];
         let justSkipped = false;
@@ -1227,6 +2294,10 @@
                     nextEvent();
                 }, 250);
             }
+
+            if (current.rewind || current.type === "rewind") {
+                triggerRewind();
+            }
         }
 
         function renderChoices(choices, container = choicesContainer) {
@@ -1423,6 +2494,13 @@
                     typingFinished = () => {
                         renderChoices(current.choices);
                     };
+                    return;
+                }
+
+                if (current.type === "maze") {
+                    hideAllScreens();
+                    mazeScreen.style.display = "block";
+                    mazeGame.start();
                     return;
                 }
 
