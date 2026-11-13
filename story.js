@@ -1,7 +1,6 @@
 function getScenario() {
     return [
         { label: "prologue" },
-        { type: "battle", image: "test.png", name: "たぬき", text: "（よし、成功！？）", items: ["ハンガーストロング砲"] },
         { music: "prologue", path: "prologue.mp3" },
         { type: "message1", image: "test.png", name: "解説", text: "ぼくはたぬき。どこにでもいるふつうのたぬき。\n今日は友達のひよこ、ねこと山の中をさんさくしている。" },
         { type: "message1", image: "prologue1.png", name: "解説", text: "しばらく歩いていると、ふいに パーン パパーン と音がした。", sounds: { 10: "ban.mp3", 18: "ban.mp3" } },
@@ -690,24 +689,59 @@ function getScenario() {
         { type: "message1", image: "test.png", name: "たぬき", text: "わーーー..." },
         { type: "message1", image: "afewmomentslater.jpg", name: "解説", text: "A few moments later", sounds: { 0: "afewmomentslater.mp3" } },
         { type: "message1", image: "test.png", name: "たぬき", text: "いってぇー..." },
-        { type: "message1", image: "test.png", name: "たぬき", text: "わー！戻ってきたんだ！街並みずいぶん変わってるな...そういえば、ひよこと猫の刑務所はどこだろう？" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "わー！戻ってきたんだ！街並みずいぶん変わってるな...そういえば、ひよこと猫の刑務所はどこだろう？脱獄したのは本当だったのかな？" },
         { type: "message1", image: "test.png", name: "たぬき", text: "「あっあの　この近くに刑務所はありますか？」" },
         { type: "message1", image: "test.png", name: "？？？", text: "「ああー刑務所ならこの道をまっすぐ行って、右に曲がって、またまっすぐ行ったところにあるよ。」" },
         { type: "message1", image: "test.png", name: "たぬき", text: "「ありがとうございます！」" },
         { type: "message1", image: "test.png", name: "たぬき", text: "よし！刑務所に着いたぞ！じゃあ、ひよこと猫を探しにいくぞ！" },
-        { type: "maze", clear: "ここまでしかつくってないよーん" },
-
-
-
-
-
-
-
-
-
-
-
-
+        { type: "maze", clear: { type: "message1", image: "test.png", name: "たぬき", text: "「よしっクリアだ！」" } },
+        { type: "message1", image: "test.png", name: "たぬき", text: "あ、あそこだ！ひよこは鳥かごに、猫はケージにいれられてる！（てか鍵かかってるじゃん）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「おーい、ひよこー！猫ー！聞こえますかー！」" },
+        { type: "message1", image: "test.png", name: "ひよこと猫", text: "「・・・ZZZ」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "もう！しょうがない自分で探すしか..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "ん？そういえばあの箱、何だろう？開けてみるか！\n３、２、１！" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "！？か、鍵だ！（セキュリティガバガバすぎるでしょ）でも一つだけだな...これ、ひよこか猫かどっちのだろう？うーん..." },
+        { type: "message1", image: "afewmomentslater.jpg", name: "久々の解説", text: "A few moments later", sounds: { 0: "afewmomentslater.mp3" } },
+        { type: "message1", image: "test.png", name: "たぬき", text: "ん？何か暗号が書いてあるぞ！" },
+        { type: "message1", image: "test.png", name: "暗号文", text: "010000110110000101110100" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "何だこりゃ？0と1の組み合わせ...", sounds: { 0: "nanikore.mp3" } },
+        { type: "choice", image: "test.png", name: "たぬき", text: "ひよこと猫どっちだろう？", choices: [{ text: "ひよこ", jump: "hiyokoover" }, { text: "猫", jump: "nekokoko" }] },
+        { label: "hiyokoover" },
+        { type: "message1", image: "test.png", name: "start!", text: "ーすうがくのおべんきょうー" },
+        { type: "message1", image: "test.png", name: "数学者たぬき", text: "えーっと、これは２進数だから、まずは普段使っている数（１０進数）に変換してみよう！" },
+        { type: "message1", image: "test.png", name: "プログラマーたぬき", text: "でもこれはいくつかに分けられるみたい！だからコンピューターの世界でよく使う１バイト（８ビット）に分けると01000011　01100001　01110100で、それぞれ１０進数に変換すると..." },
+        { type: "message1", image: "test.png", name: "数学者たぬき", text: "01000011　01100001　01110100だ！まずは01000011から！" },
+        { type: "message1", image: "test.png", name: "数学者たぬき", text: "左から順に2⁷、2⁶、2⁵、2⁴、2³、2²、2¹、2⁰として計算すると、0×2⁷ + 1×2⁶ + 0×2⁵ + 0×2⁴ + 0×2³ + 0×2² + 1×2¹ + 1×2⁰で0 + 64 + 0 + 0 + 0 + 0 + 2 + 1だから６７だ！その調子で全部計算すると..." },
+        { type: "message1", image: "pleasewait.jpg", name: "解説", text: "全力計算中" },
+        { type: "message1", image: "test.png", name: "数学者たぬき", text: "67、97、116になった！でもこれでどうしよう...試しに足してみるか...　67 + 97 + 116 = 280" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "280って何だろう...ん？これってひ（２）よ（８）こ（０）じゃん！" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "よし、やってみるか...」" },
+        { type: "message1", image: "test.png", name: "？？", text: "ガチャガチャ" },
+        { type: "choice", image: "test.png", name: "たぬき", text: "あれ、開かないな...じゃあ猫かな？", choices: [{ text: "猫", jump: "nekokoko" }] },
+        { label: "nekokoko" },
+        { type: "message1", image: "test.png", name: "start!", text: "ーすうがくのおべんきょうー" },
+        { type: "message1", image: "test.png", name: "数学者たぬき", text: "えーっと、これは２進数だから、まずは普段使っている数（１０進数）に変換してみよう！" },
+        { type: "message1", image: "test.png", name: "プログラマーたぬき", text: "でもこれはいくつかに分けられるみたい！だからコンピューターの世界でよく使う１バイト（８ビット）に分けると01000011　01100001　01110100で、それぞれ１０進数に変換すると..." },
+        { type: "message1", image: "test.png", name: "数学者たぬき", text: "01000011　01100001　01110100だ！まずは01000011から！" },
+        { type: "message1", image: "test.png", name: "数学者たぬき", text: "左から順に2⁷、2⁶、2⁵、2⁴、2³、2²、2¹、2⁰として計算すると、0×2⁷ + 1×2⁶ + 0×2⁵ + 0×2⁴ + 0×2³ + 0×2² + 1×2¹ + 1×2⁰で0 + 64 + 0 + 0 + 0 + 0 + 2 + 1だから６７だ！その調子で全部計算すると..." },
+        { type: "message1", image: "pleasewait.jpg", name: "解説", text: "全力計算中" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "67、97、116になった！でもこれでどうしよう..." },
+        { type: "message1", image: "test.png", name: "プログラマーたぬき", text: "ん？これって文字コード（ASCIIコード）？　だとしたら67はC、97はa、116はt...「Cat！？」\nじゃあ猫？" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "よし、やってみるか...」" },
+        { type: "message1", image: "test.png", name: "？？", text: "ガチャガチャ" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「あ、あいた！」" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "起こす？でもあとでひよこと一緒に起こそうかな..." },
+        { type: "message1", image: "test.png", name: "たぬき", text: "てかこの箱なに？何が入ってるんだろう？" },
+        { type: "message1", image: "test.png", name: "？？", text: "ガチャ" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "「か、鍵だ！」（セキュリティガバガバすぎるでしょ（２回目））（てか起こしちゃうじゃん静かにしないと）" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "これにも暗号があるな...てか暗号ながっ！" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "問題\nある動物を表す漢字について、以下のヒントから導き出される動物は何でしょう？\nその漢字の一方のパーツは、まぐさという意味の漢字です。もう一方は「スイ」などと読みます。" },
+        { type: "message1", image: "test.png", name: "漢字博士たぬき", text: "えっと、第一のヒント　まぐさという意味の漢字は何か？か...　秣、芻、蒭、茭などたくさんあるな..." },
+        { type: "message1", image: "test.png", name: "漢字博士たぬき", text: "第二のヒント「スイ」などと読む漢字か...　一個目のヒントで他の漢字とつなげられるのは芻だけだ！動物だから「雛（ひよこ）」だ！隹はスイと読む！よし開けるぞ！" },
+        { type: "message1", image: "test.png", name: "？？", text: "ガチャン" },
+        { type: "message1", image: "test.png", name: "たぬき", text: "あ、あいた！じゃあ二人とも起こすか...「おーい！起きろぉ～！」" },
+        { type: "message1", image: "test.png", name: "ひよこと猫", text: "「んんん？」" },
+        { type: "message1", image: "test.png", name: "ひよこと猫", text: "「たったぬき　どうしてここに？」" },
 
 
 
